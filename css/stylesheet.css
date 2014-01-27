@@ -1,0 +1,155 @@
+body {
+	background-color: #000;
+	margin: 0px;
+	overflow: hidden;
+	/*font-family: 'Droid Serif', serif;*/
+}
+
+#closeDialog {
+	float: right;
+	vertical-align: middle;
+	font-family: Arial, Tahoma, Verdana, sans-serif;
+	color: #fff;
+	font-size: 24px;
+	font-weight: bold;
+	text-shadow: 0px 0px 0px rgba(255, 255, 255, 1);
+	cursor: pointer;
+	-moz-opacity: 0.70;
+	opacity: 0.70;
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha"(Opacity=70);
+}
+
+#closeDialog:hover {
+	-moz-opacity: 1;
+	opacity: 1;
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha"(Opacity=100);
+	text-shadow: 0px 0px 12px rgba(255, 255, 255, 1);
+}
+
+.object-label {
+	background: #666;
+	color: #fff;
+	display: none;
+	padding: 5px;
+	font-size: small;
+	border-radius: 2px;
+	-moz-opacity: 0.70;
+	opacity: 0.70;
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha"(Opacity=70);
+}
+
+#controls {
+	position: absolute;
+	top:0px;
+	left:0px;
+	padding: 20px;
+	width: 20px;
+}
+
+#soundToggle, #helpToggle {
+	display: block;
+	width: 32px;
+	height: 32px;
+	background: #fff;
+	margin-left: -50%;
+}
+
+#soundToggle { margin-top: 20px; }
+#helpToggle { margin-bottom: 20px; }
+
+.link-info {
+	color: #fff;
+}
+
+#zoomScroll {
+	height: 700px;
+	cursor: n-resize;
+	margin-left: 2px;
+}
+
+#zoomScroll div { cursor: n-resize; }
+
+#info {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	padding: 15px;
+	text-align: right;
+	background: #808080;
+}
+
+canvas { border: 1px solid #fff; }
+
+#julianDateTime {
+	color: #fff;
+	font-size: x-large;
+}
+
+#tourLink {
+	color: #fff;
+	font-size: medium;
+}
+
+#scales {
+	color: #fff;
+	position: absolute;
+	bottom:80px;
+	right:0px;
+	padding: 20px;
+	height: 20px;
+	z-index: 1001;
+}
+
+#planetScale, #speedScale {
+	width: 150px;
+	margin-top: -10px;
+}
+
+#dialogUnderlay {
+	display: none;
+	-moz-opacity: 0.5;
+	opacity: 0.5;
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha"(Opacity=50);
+	text-shadow: 0px 0px 12px rgba(255, 255, 255, 0.5);
+	background: #000;
+	width: 600px;
+	height: 700px;
+	position: absolute;
+	top: 80px;
+	right: 20px;
+	padding: 20px;
+	width: 25%;
+	height: 70%;
+	z-index: 1001;
+}
+
+#dialogWindow {
+	display: none;
+	width: 600px;
+	height: 700px;
+	position: absolute;
+	top: 80px;
+	right: 20px;
+	padding: 20px;
+	width: 25%;
+	height: 70%;
+	color: #fff;
+	-webkit-box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 0.77);
+	-moz-box-shadow:    0px 0px 30px 0px rgba(255, 255, 255, 0.77);
+	box-shadow:         0px 0px 30px 0px rgba(255, 255, 255, 0.77);
+	border-radius: 7px;
+	-webkit-border-radius: 7px;
+	-moz-border-radius: 7px;
+	font-family: 'Droid Serif', serif;
+	font-size: 12pt;
+	text-shadow: 0px 0px 4px rgba(255, 255, 255, 1);
+	z-index: 1001;
+}
+
+.heading {
+	border-bottom: 1px solid #fff;
+	color: #fff;
+	font-size: xx-large;
+	text-shadow: 0px 0px 8px rgba(255, 255, 255, 1);
+	padding: 5px;
+}

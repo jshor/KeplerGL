@@ -1,0 +1,9 @@
+- OrbitControls with momentum and movement damping
+- "Tour a planet" options
+	- Make perspective planet invisible
+- Comet and asteroid belt and sun
+- Planetary information
+- Planet rotation and size
+- Make sure satellite ellipse paths do not rotate with the planet
+- Zoom functions
+- Loading screen should have blur effect

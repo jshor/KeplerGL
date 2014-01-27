@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>KeplerGL</title>
+		<link rel="stylesheet" href="css/jquery.nouislider.css">
+		<link rel="stylesheet" href="css/stylesheet.css">
+		<link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
+		<script data-main="Kepler" src="lib/require.js"></script>
+	</head>
+	<body>
+		<div id="controls">
+			<div id="helpToggle"></div>
+			<div id="zoomScroll">
+			</div>
+			<div id="soundToggle"></div>
+		</div>
+		<div id="info">
+			<span id="julianDateTime">January 1, 1970 23:59:00 UTC</span><br style="clear:both"/>
+			<span id="tourLink">Tour a planet</span>
+		</div>
+		<div id="scales">
+			Time speed: &times;10<sup id="timeSpeed">0</sup><BR><br style="clear:both" />
+			<div id="speedScale">
+			</div>
+			<br style="clear:both" />
+			Planet size:<BR><br style="clear:both" />
+			<div id="planetScale">
+			</div>
+		</div>
+		<div id="dialogUnderlay"></div>
+		<div id="dialogWindow">
+			<div class="heading">Mercury<span id="closeDialog">&times;</span></div>
+			<p>some info about mercury</p>
+			<br />
+			Velocity at position: <span id="velocity"></span> m/s<br />
+			Distance from Sun: <span id="distance"></span> AU<br />
+		</div>
+	</body>
+</head>
