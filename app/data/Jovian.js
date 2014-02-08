@@ -2,11 +2,12 @@ var Jupiter = {
 	objectType: "Jovian",
 	name: "Jupiter",
 	mass: 0.055,
+	GM: 126686534,
 	axialTilt: 3.13,
 	semimajor: 778547200,
 	semiminor: 777620566,
 	radius: 69911,
-	inclination: 6.09,
+	inclination: 1.31,
 	argPeriapsis: 275.066,
 	lastPeriapsis: 1300492800, // UNIX time
 	nextPeriapsis: 1674828800, // UNIX time

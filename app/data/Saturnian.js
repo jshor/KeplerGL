@@ -2,11 +2,12 @@ var Saturn = {
 	objectType: "Jovian",
 	name: "Saturn",
 	mass: 0.055,
+	GM: 37931187,
 	axialTilt: 26.73,
 	semimajor: 1433449370,
 	semiminor: 1431222154,
 	radius: 58232,
-	inclination: 5.51,
+	inclination: 2.49,
 	argPeriapsis: 336.013862,
 	lastPeriapsis: 1056347581, // UNIX time
 	nextPeriapsis: 1986336202, // UNIX time
