@@ -1,6 +1,6 @@
 define([
 	'jquery',
-	'threejs/OBJLoader',
+	'three/OBJLoader',
 	'objects/HeliocentricObject',
 	'objects/SatelliteObject',
 	'data/Mercurian',
@@ -13,14 +13,14 @@ define([
 /* TBD: Implement camera look at and then zoom (for tours) */
 function ($, OBJLoader, HeliocentricObject, SatelliteObject, Mercurian, Jovian, Saturnian, Hallean, Uranian, Neptunian) {
 	/* TBD: Add sun mesh */
-	function SolarSystem(scene, Astrodynamics) {
+	function SolarSystem(scene) {
 		/* create planets and their satellites */
 		this.satellites = Array();
 		this.planets	= Array();
 		this.scene		= scene;
 		
 		/* create planet objects */
-		this.createPlanets([Mercury, Jupiter, Saturn, Uranus, Neptune, Halley], Astrodynamics);
+		this.createPlanets([Mercury, Jupiter, Saturn, Uranus, Neptune, Halley]);
 			
 		/* sunlight */
 
@@ -116,9 +116,9 @@ function ($, OBJLoader, HeliocentricObject, SatelliteObject, Mercurian, Jovian, 
 		scene.paused = false;
 	}
 	
-	SolarSystem.prototype.createPlanets = function(planets, Astrodynamics) {
+	SolarSystem.prototype.createPlanets = function(planets) {
 		for(var i=0; i<planets.length; i++) {
-			var obj = new HeliocentricObject(planets[i], this.scene, Astrodynamics);
+			var obj = new HeliocentricObject(planets[i], this.scene);
 			this.planets.push(obj);
 
 			for(var j=0; j<planets[i].satellites.length; j++)
