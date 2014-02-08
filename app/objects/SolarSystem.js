@@ -3,6 +3,7 @@ define([
 	'threejs/OBJLoader',
 	'objects/HeliocentricObject',
 	'objects/SatelliteObject',
+	'data/Mercurian',
 	'data/Jovian',
 	'data/Saturnian',
 	'data/Hallean',
@@ -10,7 +11,7 @@ define([
 	'data/Neptunian',
 ], 
 /* TBD: Implement camera look at and then zoom (for tours) */
-function ($, OBJLoader, HeliocentricObject, SatelliteObject, Jovian, Saturnian, Hallean, Uranian, Neptunian) {
+function ($, OBJLoader, HeliocentricObject, SatelliteObject, Mercurian, Jovian, Saturnian, Hallean, Uranian, Neptunian) {
 	/* TBD: Add sun mesh */
 	function SolarSystem(scene, Astrodynamics) {
 		/* create planets and their satellites */
@@ -19,43 +20,34 @@ function ($, OBJLoader, HeliocentricObject, SatelliteObject, Jovian, Saturnian, 
 		this.scene		= scene;
 		
 		/* create planet objects */
-		this.createPlanets([Jupiter, Saturn, Uranus, Neptune], Astrodynamics);
+		this.createPlanets([Mercury, Jupiter, Saturn, Uranus, Neptune, Halley], Astrodynamics);
 			
 		/* sunlight */
-		this.pointLight = new THREE.PointLight( 0xffffff, 0.75, 50 );
+
+		this.pointLight = new THREE.PointLight( 0xffffff, 0.95, 1000 );
 		this.pointLight.color.setHSL(0.55, 0.9, 0.5);
 		this.pointLight.color.setHSL(0.08, 0.8, 0.5);
 		this.pointLight.color.setHSL(0.995, 0.5, 0.9);
-		
-		/* ambient light */
-		scene.add(new THREE.AmbientLight(0x666666));
-		 
-/*
-		// asteroid belt system
-		var asteroidBeltGeometry = new THREE.Geometry();
-		var asteroidBeltMaterial = new THREE.ParticleSystemMaterial({color: 0x808080, size: 1, sizeAttenuation: false});
-
-		for (var i=0; i<10000; i++) {
-			asteroidBeltVertex = new THREE.Vector3();
-			asteroidBeltVertex.x = Math.cos(2*Math.PI/180*i)*(401000950 + (Math.random()*2 - 1)*100000700);
-			asteroidBeltVertex.y = Math.random()*50000000*(i%2==0?-1:1);
-			asteroidBeltVertex.z = Math.sin(2*Math.PI/180*i)*(401000950 + (Math.random()*2 - 1)*100000700);
-			asteroidBeltGeometry.vertices.push(asteroidBeltVertex);
-		}
-
-		this.asteroidBelt = new THREE.ParticleSystem(asteroidBeltGeometry, asteroidBeltMaterial);
-		//scene.getScene().add(this.asteroidBelt);
-*/		
+	
 		// sun sprite [a plane that always looks at the camera]
-		var sunTexture 	= THREE.ImageUtils.loadTexture("app/textures/sun2.png");
+		var sunTexture 	= THREE.ImageUtils.loadTexture("app/textures/sunflare.png");
 		var sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture, side: THREE.DoubleSide, transparent: true });
-		var sunGeometry = new THREE.PlaneGeometry(0.001, 0.001, 1, 1);
+		var sunGeometry = new THREE.PlaneGeometry(scene.toScale(150000000), scene.toScale(150000000), 1, 1);
 		this.sunSprite 	= new THREE.Mesh(sunGeometry, sunMaterial);
 
 		// repeat the texture
 		sunTexture.wrapS = THREE.RepeatWrapping;
 		sunTexture.wrapT = THREE.RepeatWrapping;
-
+		
+		/* sun mesh */
+		
+		var geometrySun = new THREE.SphereGeometry(scene.toScale(696342), 32, 32);	
+		var materialSun = new THREE.MeshLambertMaterial({color:0xffffff, ambient:0xffffff, emissive:0xffffff});
+		
+			/* draw the sphere */
+		SunMesh = new THREE.Mesh(geometrySun, materialSun);
+		scene.add(SunMesh);
+		
 		// stretch the texture to fit the plane
 		sunTexture.repeat.x = sunTexture.repeat.y = 1;
 
@@ -66,6 +58,27 @@ function ($, OBJLoader, HeliocentricObject, SatelliteObject, Jovian, Saturnian, 
 		
 		scene.add(this.sunSprite);
 		scene.add(this.pointLight);
+		
+		/* skybox */
+	
+	var imagePrefix = "app/textures/images/";
+	var directions  = ["px", "nx", "py", "ny", "pz", "nz"];
+//	var directions  = ["sky1", "sky1", "sky2", "sky3", "sky4", "sky5"];
+	var imageSuffix = ".jpg";
+	
+	var materialArray = [];
+	for (var i = 0; i < 6; i++)
+		materialArray.push( new THREE.MeshBasicMaterial({
+			map: THREE.ImageUtils.loadTexture( imagePrefix + "milky" + imageSuffix ),
+			side: THREE.BackSide
+		}));
+		
+		
+
+
+		
+		
+		// add it to the scene
 		
 		/* load the ISS */
 		
@@ -83,14 +96,14 @@ function ($, OBJLoader, HeliocentricObject, SatelliteObject, Jovian, Saturnian, 
 		 var manager = new THREE.LoadingManager();
                                 manager.onProgress = function ( item, loaded, total ) {
 
-                                        console.log( item, loaded, total );
+                              //          console.log( item, loaded, total );
 
                                 };
 								
 			var loader = new THREE.OBJLoader( manager );
 									loader.load( 'app/obj/iss.obj', function ( object ) {
 											//object.position.y = 0;
-											scene.add( object );
+											//scene.add( object );
 											object.scale.set(0.00005,0.00005,0.00005);
 											
 									} );
