@@ -1,17 +1,11 @@
-define([
-	'jquery'
-], 
-function ($) {
-	function Astrodynamics() { }
-	
-	Astrodynamics.prototype.meanAnomaly = function(t, P) {
+var OrbitalDynamics = {
+	meanAnomaly: function(t, P) {
 		/* mean anomaly, in degrees (mod 1 for percentage) */
 		var meanAnom = t/P % 1 * 360;
 		
 		return meanAnom;
-	};
-
-	Astrodynamics.prototype.computeEccentricAnomaly = function(ecc, time, lastPeriapsis, nextPeriapsis) {
+	},
+	computeEccentricAnomaly: function(ecc, time, lastPeriapsis, nextPeriapsis) {
 		/* get eccentric anomaly as a function of time since periapsis, current time and eccentricity */
 		var E, F;
 		var timePassed = (time - lastPeriapsis);
@@ -29,15 +23,12 @@ function ($) {
 		}
 		
 		return E;
-	};
-
-	Astrodynamics.prototype.getTheta = function(ecc, E) {
+	},
+	getTheta: function(ecc, E) {
 		/* get angle from eccentricity and eccentric anomaly */
 		var min = Math.sqrt(1.0-ecc*ecc);
 		var theta = Math.atan2(min*Math.sin(E), Math.cos(E)-ecc)/(Math.PI/180);
 		
 		return (theta < 0 ? 360+theta : theta);
-	};
-	
-	return Astrodynamics;
-});
+	}
+};
