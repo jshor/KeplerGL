@@ -6,11 +6,14 @@ function ($) {
 	};
 	
 	Controls.prototype.setControls = function(scene) {
+		this.lastZoomPosition = 0;
+		this.scene = scene;
+		
 		$(document).ready(function() {
-			/* zoom scroll */
+			// zoom scroll
 			$("#zoomScroll").noUiSlider({
-				range: [-1,100],
-				start: 100,
+				range: [0,100],
+				start: 0,
 				handles: 1,
 				connect: "lower",
 				orientation: "vertical",
@@ -18,26 +21,34 @@ function ($) {
 					resolution: 1
 				},
 				slide: function() {
+					scene.isZoomUpdating = true;
 					scene.changeZoom($(this).val());
+					$("#tourLink").html("sliding");
 				},
+			}).change(function() {
+				scene.isZoomUpdating = false;
+				$("#tourLink").html("done");
 			});
 			
 			$("#zoomScroll .noUi-handle").append($("<div></div>"));
 			
-			/* planet scale slider */
+			// planet scale slider 
 			$("#planetScale").noUiSlider({
-				range: [0,255],
+				range: [0,8],
 				start: 127,
 				handles: 1,
 				connect: "lower",
 				orientation: "horizontal",
 				serialization: {
 					resolution: 1
+				},
+				slide: function() {
+					scene.explore("Mercury");
 				}
 			});
 			$("#planetScale .noUi-handle").append($("<div></div>"));
 			
-			/* speed scale slider */
+			// speed scale slider
 			$("#speedScale").noUiSlider({
 				range: [1,8],
 				start: 1,
@@ -54,35 +65,35 @@ function ($) {
 				}
 			});
 			$("#speedScale .noUi-handle").append($("<div></div>"));
+
 			
-			/* close the dialog box */
-			$("#closeDialog").click(function() {
-				$("#dialogWindow").fadeOut("normal");
-				$("#dialogUnderlay").fadeOut("normal");	
-			});
-			
-			$("#info").click(function() {
+			$("#tourLink").click(function() {
 				$("#dialogWindow").fadeIn("normal");	
 				$("#dialogUnderlay").fadeIn("normal");	
+				$("#objTitle").fadeOut("normal");	
+			});
+			
+			$("#objTitle").click(function() {
+				$(this).fadeOut("normal");	
+				$(".dialogWindow").fadeIn("slow");
+				$(".dialogUnderlay").fadeIn("slow");
 			});
 		});
+	};
+	
+	Controls.prototype.toggleTitle = function(show) {
+		if(show && !$(".dialogWindow").is(':visible') && !$(".dialogUnderlay").is(':visible') && !this.scene.allowZoom)
+			$("#objTitle").fadeIn("slow");
+		else
+			$("#objTitle").fadeOut("slow");
 	};
 	
 	Controls.prototype.correctZoomScrollHeight = function() {
 		$("#zoomScroll").height(window.innerHeight - 150);
 	};
 	
-	Controls.prototype.zoomLevel = function(level) {
+	Controls.prototype.setZoom = function(level) {
 		$("#zoomScroll").val(level, true);
-	};
-	
-	Controls.prototype.updateZoom = function(zoom) {
-		if(!Math.abs($("#zoomScroll").val()-zoom) <= 2) {
-			//$("#zoomScroll").val(zoom);
-		//	$("#tourLink").html("Needs update: " + Math.abs($("#zoomScroll").val()-zoom) + " <= 2");
-		} //else
-		//	$("#tourLink").html("Good.");
-		//$("#tourLink").html(Math.abs($("#zoomScroll").val()-zoom));
 	};
 	
 	return Controls;
