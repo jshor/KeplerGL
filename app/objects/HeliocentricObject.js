@@ -5,7 +5,6 @@ define([
 	'interface/DialogWindow'
 ], 
 function ($, Mesh, Astrodynamics, DialogWindow) {
-	
 function toRadians(x) {
 	return x * Math.PI / 180;
 }
@@ -48,47 +47,44 @@ function findOffset(element) {
   return pos;
 } 
 
-	function HeliocentricObject(data, scene, Astrodynamics, DialogWindow) {
-		var DialogWindow 	= require('interface/DialogWindow');
-		
-		this.name			= data.name;
-		this.mass			= data.mass;
-		this.radius			= data.radius;
-		this.semimajor		= data.semimajor;
-		this.semiminor		= data.semiminor;
-		this.inclination	= data.inclination;
-		this.argPeriapsis	= data.argPeriapsis;
-		this.longAscNode	= data.longAscNode;
-		this.eccentricity	= data.eccentricity;
-		this.lastPeriapsis	= data.lastPeriapsis;
-		this.nextPeriapsis	= data.nextPeriapsis;
-		this.Astrodynamics	= Astrodynamics;
+	function HeliocentricObject(data, scene) {
+		this.name = data.name;
+		this.mass = data.mass;
+		this.radius = data.radius;
+		this.semimajor = data.semimajor;
+		this.semiminor = data.semiminor;
+		this.inclination = data.inclination;
+		this.argPeriapsis = data.argPeriapsis;
+		this.longAscNode = data.longAscNode;
+		this.eccentricity = data.eccentricity;
+		this.lastPeriapsis = data.lastPeriapsis;
+		this.nextPeriapsis = data.nextPeriapsis;
 
-		/* stage objects */
-		this.scene			= scene;
-		this.controls		= scene.interfaceControls;
-		this.camera			= scene.camera;
+		// stage objects
+		this.scene = scene;
+		this.controls = scene.interfaceControls;
+		this.camera	= scene.camera;
 		
-		/* materials */
-		this.material 		= new THREE.MeshPhongMaterial({
-				map:         THREE.ImageUtils.loadTexture('app/textures/' + this.name + '.png'),
-				bumpMap:     THREE.ImageUtils.loadTexture('app/textures/' + this.name + '_bump.jpg'),
-				bumpScale:   0.00000005, // make it to planet scale 
-				specularMap: THREE.ImageUtils.loadTexture('app/textures/' + this.name + '_spec.png'),
-				specular:    new THREE.Color('gray')
-			});
-		this.lineMaterial	= new THREE.LineBasicMaterial({ color: 0xFFFFFF, opacity:0.4, transparent: true});
-		this.label			= $("<span></span>");
-		this.motion 		= 0;
+		// materials
+		this.material = new THREE.MeshPhongMaterial({
+			map:         THREE.ImageUtils.loadTexture('app/textures/' + this.name + '.png'),
+			bumpMap:     THREE.ImageUtils.loadTexture('app/textures/' + this.name + '_bump.jpg'),
+			bumpScale:   0.00000005, // make it to planet scale 
+			specularMap: THREE.ImageUtils.loadTexture('app/textures/' + this.name + '_spec.png'),
+			specular:    new THREE.Color('gray')
+		});
+		this.lineMaterial = new THREE.LineBasicMaterial({ color: 0xFFFFFF, opacity:0.4, transparent: true});
+		this.label = $("<span></span>");
+		this.motion = 0;
 		
-		/* scale all objects down to save rendering precision */
-		this.GM 			= this.scene.toScale(132712440018); // gravitational constant of the Sun
-		this.radius			= this.scene.planetScale(this.radius);
-		this.semimajor		= this.scene.toScale(this.semimajor);
-		this.semiminor		= this.scene.toScale(this.semiminor);
+		// scale all objects down to save rendering precision
+		this.GM = this.scene.toScale(132712440018); // gravitational constant of the Sun
+		this.radius = this.scene.planetScale(this.radius);
+		this.semimajor = this.scene.toScale(this.semimajor);
+		this.semiminor = this.scene.toScale(this.semiminor);
 		
-		/* add a sphere, mesh and ellipse path */
-		this.geometry		= new THREE.SphereGeometry(this.radius, 32, 32);
+		// add a sphere, mesh and ellipse path
+		this.geometry = new THREE.SphereGeometry(this.radius, 32, 32);
 		
 		/* there are three 3D objects to add:
 			- reference plane: responsible for rotating long. of asc. node, big omega, about y-axis.
@@ -99,25 +95,25 @@ function findOffset(element) {
 			- mesh: the spherical object that holds the texture and atmosphere
 		*/
 		this.referencePlane = new THREE.Object3D();
-		this.plane			= new THREE.Object3D();
-		this.pivot			= new THREE.Object3D();
-		this.mesh			= new Mesh(data, this.scene, this.plane);
+		this.plane = new THREE.Object3D();
+		this.pivot = new THREE.Object3D();
+		this.mesh = new Mesh(data, this.scene, this.plane);
 		
-		/* draw the ellipse and its path */
-		this.focus			= Math.sqrt(Math.pow(this.semimajor, 2) - Math.pow(this.semiminor, 2));
-		this.ellipsePath	= new THREE.CurvePath();
-		this.cameraPivot	= new THREE.Object3D();
+		// draw the ellipse and its path
+		this.focus = Math.sqrt(Math.pow(this.semimajor, 2) - Math.pow(this.semiminor, 2));
+		this.ellipsePath = new THREE.CurvePath();
+		this.cameraPivot = new THREE.Object3D();
 		
-		/* create geometry for the ellipse and its visible path */
-		this.ellipse			= new THREE.EllipseCurve(0, this.focus, this.semiminor, this.semimajor, -Math.PI/2, 3*Math.PI/2, false);
+		// create geometry for the ellipse and its visible path 
+		this.ellipse = new THREE.EllipseCurve(0, this.focus, this.semiminor, this.semimajor, -Math.PI/2, 3*Math.PI/2, false);
 		this.ellipsePath.add(this.ellipse);
-		this.ellipseGeometry 	= this.ellipsePath.createPointsGeometry(500);
+		this.ellipseGeometry = this.ellipsePath.createPointsGeometry(500);
 		this.ellipseGeometry.computeTangents();
-		this.line 				= new THREE.Line(this.ellipseGeometry, this.lineMaterial);
-		this.perimeter 			= ramanujan(this.semimajor, this.semiminor);
+		this.line = new THREE.Line(this.ellipseGeometry, this.lineMaterial);
+		this.perimeter = ramanujan(this.semimajor, this.semiminor);
 		this.plane.add(this.line);
 		
-		/* add the plane to the scene and rotate it according to its argument of periapsis and inclination */
+		// add the plane to the scene and rotate it according to its argument of periapsis and inclination
 		this.scene.add(this.referencePlane);
 		this.referencePlane.add(this.plane);
 		
@@ -133,7 +129,7 @@ function findOffset(element) {
 		this.plane.add(this.pivot);
 		this.plane.add(this.mesh);
 		
-		/* rotate the plane according to the angle of inclination and the longitude of its ascending node */
+		// rotate the plane according to the angle of inclination and the longitude of its ascending node
 		this.referencePlane.rotation.x = -Math.PI/2;
 		this.referencePlane.rotation.z = toRadians(this.longAscNode);
 	
@@ -141,7 +137,7 @@ function findOffset(element) {
 		this.plane.rotation.z += toRadians(this.argPeriapsis);
 		var self = this;
 		
-		/* create the label for the object (an HTML element) and add it to the DOM */
+		// create the label for the object (an HTML element) and add it to the DOM
 		$("body").append(this.label
 			.addClass("object-label").html(this.name)
 			.attr("id", this.name)
@@ -161,7 +157,7 @@ function findOffset(element) {
 	};
 
 	HeliocentricObject.prototype.getVectorPosition = function() {
-		/* assumes matrix world has been updated */
+		// assumes matrix world has been updated
 		var vect = new THREE.Vector3();
 		vect.setFromMatrixPosition(this.mesh.matrixWorld);
 		
@@ -169,55 +165,53 @@ function findOffset(element) {
 	};
 	
 	HeliocentricObject.prototype.focusOn = function(camera) {
-		/* add a satellite object to its orbit */
+		// add a satellite object to its orbit
 		this.mesh.add(camera);
 		
-		/* Sun rays must refocus to look at the camera */
+		// Sun rays must refocus to look at the camera
 		this.scene.refocus(camera);
 	};
 
 	HeliocentricObject.prototype.setPosition = function(timestamp) {
-		/* takes a UNIX timestamp and positions the object for that date with respect to the Sun */
-		var E 		= this.Astrodynamics.computeEccentricAnomaly(this.eccentricity, timestamp, this.lastPeriapsis, this.nextPeriapsis);
-		var theta 	= this.Astrodynamics.getTheta(this.eccentricity, E);
+		// takes a UNIX timestamp and positions the object for that date with respect to the Sun
+		var E = OrbitalDynamics.computeEccentricAnomaly(this.eccentricity, timestamp, this.lastPeriapsis, this.nextPeriapsis);
+		var theta = OrbitalDynamics.getTheta(this.eccentricity, E);
 		
-		/* get percent of ellipse travelled */
+		// get percent of ellipse travelled
 		this.motion = theta / 360;
 		this.updatePosition();
 		//console.log(this.name + ": θ = " + theta + ", motion: " + this.motion);
 	};
 	
 	HeliocentricObject.prototype.updatePosition = function() {
-		/* find the magnitude of the vector of the orbiting object */
-		this.r 		= Math.sqrt((Math.pow(this.ellipsePath.getPoint(this.motion).x, 2) + Math.pow(this.ellipsePath.getPoint(this.motion).y, 2)));
-		this.speed 	= Math.sqrt(Math.abs(this.GM*((2/this.r)-(1/this.semimajor))));
+		// find the magnitude of the vector of the orbiting object
+		this.r = Math.sqrt((Math.pow(this.ellipsePath.getPoint(this.motion).x, 2) + Math.pow(this.ellipsePath.getPoint(this.motion).y, 2)));
+		this.speed = Math.sqrt(Math.abs(this.GM*((2/this.r)-(1/this.semimajor))));
 		
-		/* the motion will update every time unit with where the ellipse moves in terms of percent */
+		// the motion will update every time unit with where the ellipse moves in terms of percent
 		this.motion+= (this.scene.scaleSpeed((this.speed / this.perimeter), this.scene.getSpeedScale()));
 		this.motion = (this.motion > 1 ? 0 : this.motion);
-		
-		//this.label.html(this.motion);
 
-		/* update the info in the dialog window */
+		// update the info in the dialog window
 		if(this.name == this.scene.getPerspective() && this.dialog != undefined)
 			this.dialog.updateVelocityDistance(parseFloat(this.speed).toFixed(4), parseFloat(this.r).toFixed(4));
 		
-		/* update the mesh sphere to the new point on the ellipse, depending on the velocity at the previous vector */
-		var newPoint 	= this.ellipsePath.getPoint(this.motion);
-		var vect 		= new THREE.Vector3();
-		var uvVec 		= render3Dto2D(this.getVectorPosition(), this.camera);
+		// update the mesh sphere to the new point on the ellipse, depending on the velocity at the previous vector
+		var newPoint = this.ellipsePath.getPoint(this.motion);
+		var vect = new THREE.Vector3();
+		var uvVec = render3Dto2D(this.getVectorPosition(), this.camera);
 		
 		vect.setFromMatrixPosition(this.pivot.matrix);
 		
-		/* synchronize the movement of the pivot and mesh */
-		this.pivot.position.x	= newPoint.x;
-		this.pivot.position.y 	= newPoint.y;
-		this.mesh.position 		= vect;
+		// synchronize the movement of the pivot and mesh
+		this.pivot.position.x = newPoint.x;
+		this.pivot.position.y = newPoint.y;
+		this.mesh.position = vect;
 		
-		/* normalize the mesh w.r.t. the Sun (one side faces the Sun) */
+		// normalize the mesh w.r.t. the Sun (one side faces the Sun)
 		this.mesh.rotation.y = this.motion*2*Math.PI;
 		
-		/* if the label is hovered on, "light up" the orbital path */
+		// if the label is hovered on, "light up" the orbital path
 		if(this.scene.hoverLabel == this.name || this.scene.perspective == this.name)
 			this.line.material.opacity = 1.0;
 		else
@@ -233,7 +227,7 @@ function findOffset(element) {
 			
 			this.scene.updateCameraFocus(vect);
 		} else {
-			/* show the label if the object is visible on the screen (needs fixing) */
+			// show the label if the object is visible on the screen
 			vect = render3Dto2D(this.getVectorPosition(), this.camera);
 			
 			if(vect != null && this.scene.perspective != this.name)
