@@ -6,6 +6,8 @@ require.config({
 		"threejs/OrbitControls": "../lib/OrbitControls",
 		"threejs/GridHelper": "../lib/GridHelper",
 		"threejs/OBJLoader": "../lib/OBJLoader",
+		"objects/HeliocentricObject": "objects/HeliocentricObject",
+		"interface/DialogWindow": "interface/DialogWindow",
 		jquery : "../lib/jquery",
         "jquery.nouislider.min": "../lib/jquery.nouislider.min"
     },
@@ -16,6 +18,9 @@ require.config({
 		},
 		"threejs/OrbitControls": {
 			deps: ["threejs"]
+		},
+		"objects/HeliocentricObject": {
+			deps: ["interface/DialogWindow"]
 		},
 		"threejs/GridHelper": {
 			deps: ["threejs"]
@@ -35,6 +40,7 @@ require([
 	"objects/SolarSystem",
 	"interface/Controls",
 	"physics/Astrodynamics",
+	"interface/DialogWindow",
 	"Scene",
 ],
 function ($) {
@@ -44,6 +50,7 @@ function ($) {
     var SolarSystem = require('objects/SolarSystem');
     var Controls 	= require('interface/Controls');
     var Astrodynamics 	= require('physics/Astrodynamics');
+    var DialogWindow 	= require('interface/DialogWindow');
 
     var glScene 			= new Scene();
 	var Astrodynamics		= new Astrodynamics();
