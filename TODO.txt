@@ -1,9 +1,16 @@
-- OrbitControls with momentum and movement damping
+Things to do (in this order):
+- Fix broken GM constant, implement satellite orbits using Astrodynamics
 - "Tour a planet" options
 	- Make perspective planet invisible
-- Comet and asteroid belt and sun
-- Planetary information
-- Planet rotation and size
-- Make sure satellite ellipse paths do not rotate with the planet
-- Zoom functions
-- Loading screen should have blur effect
+	- Planetary information
+- Fix time issue and add calendar UI
+- Planet rotation and size adjustment
+- Add shadows to planets (specifically to this.mesh plane)
+- Camera spin around quaternion when focused on the Sun or Earth
+- Loading screen for textures and models
+- ISS and other satellite models
+- Fix requirejs dependency redundancy
+- Move functions to Math and Vector classes, add RungeKutta algorithm
+- About/help box, screenshot, fullscreen hotkeys
+- Add satellite data and minor planets.
+- Music
