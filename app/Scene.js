@@ -1,14 +1,11 @@
 define([
 	'jquery',
 	'interface/Controls',
-	'threejs/OrbitControls',
-	'threejs/GridHelper'
+	'three/OrbitControls',
+	'three/GridHelper'
 ], 
-function ($, Controls) {
+function ($, Controls, OrbitControls, GridHelper) {
 	function Scene() {
-		var OrbitControls 	= require('threejs/OrbitControls');
-		var Controls		= require('interface/Controls');
-		
 		// scale of km per webGL unit
 		this.timeSpeedScale = 10;
 		this.scaleConstant = 100000000000;
