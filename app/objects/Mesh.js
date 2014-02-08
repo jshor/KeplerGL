@@ -15,11 +15,12 @@ function toRadians(x) {
 				//bumpMap: THREE.ImageUtils.loadTexture('images/elev_bump_4k.jpg'),
 				//bumpScale:   0.005,
 				//specularMap: THREE.ImageUtils.loadTexture('images/water_4k.png'),
-				specular: new THREE.Color('grey')
+				specular: 0xffffff
 			});
 			
 			/* draw the sphere */
-			this.mesh = new THREE.Mesh(geometry, material);
+			this.mesh = new THREE.Object3D();
+			this.body = new THREE.Mesh(geometry, material);
 
 			/* if the item is a Jovian planet, draw its rings */
 			if(data.rings != undefined) {
@@ -40,6 +41,11 @@ function toRadians(x) {
 				this.rings.position.set(0,0,0);
 				this.rings.rotation.x = Math.PI/2;
 			}
+			
+			/* add body to the mesh */
+			this.body.rotation.y = 0;
+			this.mesh.add(this.body);
+		this.mesh.add( new THREE.AxisHelper( 0.001 ) );
 			
 			/* normalize the mesh to the orbit focus */
 			this.mesh.rotation.x = -Math.PI/2;
