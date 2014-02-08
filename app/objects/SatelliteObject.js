@@ -1,7 +1,10 @@
 define([
-	'jquery'
+	'jquery',
+	'objects/Mesh',
+	'physics/Astrodynamics',
+	'interface/DialogWindow'
 ], 
-function ($) {
+function ($, Mesh, Astrodynamics, DialogWindow) {
 	
 function toRadians(x) {
 	return x * Math.PI / 180;
@@ -46,6 +49,7 @@ function findOffset(element) {
 } 
 
 	function SatelliteObject(data, scene, planet) {
+		console.log("GM of " + planet.name + ": " + planet.GM);
 		/* stage objects */
 		this.scene			= scene;
 		this.controls		= scene.interfaceControls;
@@ -54,6 +58,7 @@ function findOffset(element) {
 		
 		this.name			= data.name;
 		this.mass			= data.mass;
+		this.GM				= planet.GM;
 		this.radius			= data.radius;
 		this.semimajor		= data.semimajor;
 		this.semiminor		= data.semiminor;
@@ -72,7 +77,7 @@ function findOffset(element) {
 		this.motion			= 0;
 		
 		/* scale all objects down to save rendering precision */
-		this.GM 			= this.scene.toScale(126686534); // gravitational constant of <<<JUPITER>>>
+		this.GM 			= this.scene.toScale(this.GM); // gravitational constant of planet
 		this.radius			= this.scene.planetScale(this.radius);
 		this.semimajor		= this.scene.planetScale(this.semimajor);
 		this.semiminor		= this.scene.planetScale(this.semiminor);
@@ -110,9 +115,25 @@ function findOffset(element) {
 		this.plane.add(this.mesh);
 		this.plane.rotation.x 	= Math.PI/2+toRadians(this.inclination);
 		this.mesh.rotation.x 	= -Math.PI/2; // rotate the planet mesh to face the Sun
+		var self = this;
 		
 		/* create the label for the object (an HTML element) and add it to the DOM */
-		$("body").append(this.label.addClass("object-label").html(this.name));
+		$("body").append(this.label
+			.addClass("object-label").html(this.name)
+			.attr("id", this.name)
+			.mouseover(function() {
+				scene.setMouseHover($(this).html(), true);
+			})
+			.mouseout(function() {
+				scene.setMouseHover($(this).html(), false); 
+			})
+			.click(function() {
+				self.scene.setPerspective(self.name, function() {
+					self.dialog = new DialogWindow("objectInfo", "some stuff about planets", self.name, self.planet.name);
+				});
+				$(this).hide();
+			})
+		);
 	};
 	
 	SatelliteObject.prototype.getVectorPosition = function() {
@@ -141,10 +162,8 @@ function findOffset(element) {
 		this.motion = (this.motion > 1 ? 0 : this.motion);
 
 		/* update the info in the dialog window */
-		if(this.name == this.scene.cameraFocus()) {
-			$("#velocity").html(parseFloat(this.speed).toFixed(2));
-			$("#distance").html(parseFloat(this.r).toFixed(2));
-		}
+		if(this.name == this.scene.getPerspective() && this.dialog != undefined)
+			this.dialog.updateVelocityDistance(parseFloat(this.speed).toFixed(4), parseFloat(this.r).toFixed(4));
 		
 		/* update the mesh sphere to the new point on the ellipse, depending on the velocity at the previous vector */
 		var newPoint 	= this.ellipsePath.getPoint(this.motion);
@@ -158,23 +177,28 @@ function findOffset(element) {
 		this.mesh.position 		= vect;
 		
 		/* normalize the mesh w.r.t. the Sun (one side always faces the Sun) */
-		this.mesh.rotation.y = this.motion*2*Math.PI;
+		this.mesh.rotation.y = -this.motion*2*Math.PI;
 		
+		/* if the label is hovered on, "light up" the orbital path */
+		if(this.scene.hoverLabel == this.name || this.scene.perspective == this.name)
+			this.line.material.opacity = 1.0;
+		else
+			this.line.material.opacity = 0.4;
 		
-		/* add rotation of planet */
+		// add rotation of planet
 		// TBD: do this...
 		this.scene.glScene.updateMatrixWorld();
 		
-		if(this.name == this.scene.cameraFocus()) {
+		if(this.name == this.scene.getPerspective()) {
 			vect = new THREE.Vector3();
 			vect.setFromMatrixPosition(this.mesh.matrixWorld);
 			
 			this.scene.updateCameraFocus(vect);
 		} else {
-			/* show the label if the object is visible on the screen (needs fixing) */
+			// show the label if the object is visible on the screen (needs fixing)
 			vect = render3Dto2D(this.getVectorPosition(), this.camera);
 			
-			if(vect != null)
+			if(vect != null && (this.planet.name == this.scene.getPerspective(true) || this.planet.name == this.scene.getPerspective()))
 				this.label.show().offset({ top: vect.y, left: vect.x });
 			else
 				this.label.hide();
