@@ -1,9 +1,10 @@
 define([
 	'jquery',
 	'objects/Mesh',
-	'physics/Astrodynamics'
+	'physics/Astrodynamics',
+	'interface/DialogWindow'
 ], 
-function ($, Mesh, Astrodynamics) {
+function ($, Mesh, Astrodynamics, DialogWindow) {
 	
 function toRadians(x) {
 	return x * Math.PI / 180;
@@ -47,7 +48,9 @@ function findOffset(element) {
   return pos;
 } 
 
-	function HeliocentricObject(data, scene, Astrodynamics) {
+	function HeliocentricObject(data, scene, Astrodynamics, DialogWindow) {
+		var DialogWindow 	= require('interface/DialogWindow');
+		
 		this.name			= data.name;
 		this.mass			= data.mass;
 		this.radius			= data.radius;
@@ -106,7 +109,7 @@ function findOffset(element) {
 		this.cameraPivot	= new THREE.Object3D();
 		
 		/* create geometry for the ellipse and its visible path */
-		this.ellipse			= new THREE.EllipseCurve(0, this.focus, this.semiminor, this.semimajor,  2 * Math.PI, 0, true);
+		this.ellipse			= new THREE.EllipseCurve(0, this.focus, this.semiminor, this.semimajor, -Math.PI/2, 3*Math.PI/2, false);
 		this.ellipsePath.add(this.ellipse);
 		this.ellipseGeometry 	= this.ellipsePath.createPointsGeometry(500);
 		this.ellipseGeometry.computeTangents();
@@ -131,16 +134,30 @@ function findOffset(element) {
 		this.plane.add(this.mesh);
 		
 		/* rotate the plane according to the angle of inclination and the longitude of its ascending node */
-		this.referencePlane.rotation.x = Math.PI/2;
-		this.referencePlane.rotation.z = -toRadians(this.longAscNode);
-		
-		this.plane.rotation.z	= -toRadians(this.argPeriapsis);
-		this.plane.rotation.y 	= -toRadians(this.inclination);
-		
-		//this.plane.add( new THREE.AxisHelper( 0.01 ) );
+		this.referencePlane.rotation.x = -Math.PI/2;
+		this.referencePlane.rotation.z = toRadians(this.longAscNode);
+	
+		this.plane.rotation.x = toRadians(this.inclination);
+		this.plane.rotation.z += toRadians(this.argPeriapsis);
+		var self = this;
 		
 		/* create the label for the object (an HTML element) and add it to the DOM */
-		$("body").append(this.label.addClass("object-label").html(this.name));
+		$("body").append(this.label
+			.addClass("object-label").html(this.name)
+			.attr("id", this.name)
+			.mouseover(function() {
+				scene.setMouseHover($(this).html(), true);
+			})
+			.mouseout(function() {
+				scene.setMouseHover($(this).html(), false); 
+			})
+			.click(function() {
+				self.scene.setPerspective(self.name, function() {
+					self.dialog = new DialogWindow("objectInfo", "some stuff about planets", self.name, "Sun");
+				});
+				$(this).hide();
+			})
+		);
 	};
 
 	HeliocentricObject.prototype.getVectorPosition = function() {
@@ -164,11 +181,10 @@ function findOffset(element) {
 		var E 		= this.Astrodynamics.computeEccentricAnomaly(this.eccentricity, timestamp, this.lastPeriapsis, this.nextPeriapsis);
 		var theta 	= this.Astrodynamics.getTheta(this.eccentricity, E);
 		
-		console.log(this.name + ": θ = " + theta);
-		
 		/* get percent of ellipse travelled */
 		this.motion = theta / 360;
 		this.updatePosition();
+		//console.log(this.name + ": θ = " + theta + ", motion: " + this.motion);
 	};
 	
 	HeliocentricObject.prototype.updatePosition = function() {
@@ -177,14 +193,14 @@ function findOffset(element) {
 		this.speed 	= Math.sqrt(Math.abs(this.GM*((2/this.r)-(1/this.semimajor))));
 		
 		/* the motion will update every time unit with where the ellipse moves in terms of percent */
-		this.motion+= this.scene.scaleSpeed((this.speed / this.perimeter), this.scene.getSpeedScale());
+		this.motion+= (this.scene.scaleSpeed((this.speed / this.perimeter), this.scene.getSpeedScale()));
 		this.motion = (this.motion > 1 ? 0 : this.motion);
+		
+		//this.label.html(this.motion);
 
 		/* update the info in the dialog window */
-		if(this.name == this.scene.cameraFocus()) {
-			$("#velocity").html(parseFloat(this.speed).toFixed(2));
-			$("#distance").html(parseFloat(this.r).toFixed(2));
-		}
+		if(this.name == this.scene.getPerspective() && this.dialog != undefined)
+			this.dialog.updateVelocityDistance(parseFloat(this.speed).toFixed(4), parseFloat(this.r).toFixed(4));
 		
 		/* update the mesh sphere to the new point on the ellipse, depending on the velocity at the previous vector */
 		var newPoint 	= this.ellipsePath.getPoint(this.motion);
@@ -201,11 +217,17 @@ function findOffset(element) {
 		/* normalize the mesh w.r.t. the Sun (one side faces the Sun) */
 		this.mesh.rotation.y = this.motion*2*Math.PI;
 		
+		/* if the label is hovered on, "light up" the orbital path */
+		if(this.scene.hoverLabel == this.name || this.scene.perspective == this.name)
+			this.line.material.opacity = 1.0;
+		else
+			this.line.material.opacity = 0.4;
+
 		/* add rotation of planet */
 		// TBD: do this...
 		this.scene.glScene.updateMatrixWorld();
 		
-		if(this.name == this.scene.cameraFocus()) {
+		if(this.name == this.scene.getPerspective()) {
 			vect = new THREE.Vector3();
 			vect.setFromMatrixPosition(this.pivot.matrixWorld);
 			
@@ -214,7 +236,7 @@ function findOffset(element) {
 			/* show the label if the object is visible on the screen (needs fixing) */
 			vect = render3Dto2D(this.getVectorPosition(), this.camera);
 			
-			if(vect != null)
+			if(vect != null && this.scene.perspective != this.name)
 				this.label.show().offset({ top: vect.y, left: vect.x });
 			else
 				this.label.hide();
