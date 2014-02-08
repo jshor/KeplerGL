@@ -37,12 +37,6 @@ define([
 function($, SolarSystem, Astrodynamics, Controls, Scene) {
     // TBD: add in a loading screen, and check for webgl
 	// if no webgl is present, show the user an info screen
-    var Scene 		= require('Scene');
-    var SolarSystem = require('objects/SolarSystem');
-    var Controls 	= require('interface/Controls');
-    var Astrodynamics 	= require('physics/Astrodynamics');
-    var DialogWindow 	= require('interface/DialogWindow');
-
     var glScene 			= new Scene();
 	var solarSystemScene 	= new SolarSystem(glScene);
 	
@@ -51,8 +45,8 @@ function($, SolarSystem, Astrodynamics, Controls, Scene) {
 	glScene.animate(solarSystemScene);
 	glScene.clockStart();
 	
-	$(function(){
-		$( window ).resize(function() {
+	$(function() {
+		$(window).resize(function() {
 			glScene.windowResize();
 			interfaceControls.correctZoomScrollHeight();
 		});
