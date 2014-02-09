@@ -37,7 +37,7 @@ function ($) {
 		
 		if(type == "objectInfo") {
 			// if object is a planet or a satellite, use dialog to display its info
-			this.dialogInfo = $("<p></p>");
+			this.dialogInfo = $("<div></div>").addClass("dialog-info");
 			this.dialogInfo.html(html);
 			this.dialogTitle.html(title);
 			this.dialogOverlay.append(this.dialogTitle);
@@ -47,10 +47,27 @@ function ($) {
 			this.velocity = $("<span></span>");
 			this.distance = $("<span></span>");
 			
+			// create a button to change perspective
+			this.chgPerspective = $("<span></span>");
+			this.chgPerspective.addClass("chg-perspective");
+			this.chgPerspective.html(" Go! ");
+			this.chgPerspective.click(function() {
+				// chg...
+			});
+			
+			// menu for perspectives
+			this.perspectiveList = $("<span></span>");
+			this.perspectiveList.addClass("perspective-list");
+			this.perspectiveList.html("select a destination... &raquo;");
+			
 			this.dialogOverlay.append("<br />");
 			this.dialogOverlay.append("Velocity at position: ").append(this.velocity).append(" km/s");
 			this.dialogOverlay.append("<br />");
 			this.dialogOverlay.append("Distance from " + relativeBody + ": ").append(this.distance).append(" AU");
+			this.dialogOverlay.append("<br />").append("<br />");
+			this.dialogOverlay.append("From " + title + ", look at: ");
+			this.dialogOverlay.append(this.perspectiveList);
+			this.dialogOverlay.append(this.chgPerspective);
 		}
 		
 		this.dialogOverlay.fadeIn("slow");
