@@ -49,30 +49,36 @@ function findOffset(element) {
 } 
 
 	function SatelliteObject(data, scene, planet) {
-		console.log("GM of " + planet.name + ": " + planet.GM);
-		// stage objects
 		this.scene = scene;
-		this.controls = scene.interfaceControls;
-		this.planet = planet;
-		this.camera = scene.camera;
 		this.name = data.name;
 		this.mass = data.mass;
-		this.GM = planet.GM;
-		this.radius = data.radius;
+		this.nextPeriapsis = data.nextPeriapsis;
+		this.lastPeriapsis = data.lastPeriapsis;
+		this.GM = planet.GMass;
+		this.planet = planet;
 		this.semimajor = data.semimajor;
 		this.semiminor = data.semiminor;
+		this.radius = data.radius;
+		this.camera = scene.camera;
 		this.inclination = data.inclination;
+		this.controls = scene.interfaceControls;
+		this.eccentricity = data.eccentricity;
+		this.atmosphere = (data.atmosphere != undefined ? data.atmosphere : 0xFFFFFF);
 
 		// materials
-		this.texture 		= new THREE.ImageUtils.loadTexture("app/textures/" + this.name + ".jpg");
+		//this.texture 		= new THREE.ImageUtils.loadTexture("app/textures/" + this.name + ".jpg");
 		this.material 		= new THREE.MeshPhongMaterial({
-			map: this.texture,
+			//map: this.texture,
 			//bumpMap: THREE.ImageUtils.loadTexture('images/elev_bump_4k.jpg'),
 			//bumpScale:   0.005,
 			//specularMap: THREE.ImageUtils.loadTexture('images/water_4k.png'),
 			specular: new THREE.Color('grey')
 		});
-		this.lineMaterial = new THREE.LineBasicMaterial({ color: 0xFFFFFF, opacity:0.4, transparent: true});
+		this.lineMaterial = new THREE.LineBasicMaterial({
+			color: this.atmosphere,
+			opacity: 0.4,
+			transparent: true
+		});
 		this.label = $("<span></span>");
 		this.motion = 0;
 		
@@ -119,6 +125,7 @@ function findOffset(element) {
 		// create the label for the object (an HTML element) and add it to the DOM
 		$("body").append(this.label
 			.addClass("object-label").html(this.name)
+	//		.css("color", "#" + self.atmosphere.toString(16))
 			.attr("id", this.name)
 			.mouseover(function() {
 				scene.setMouseHover($(this).html(), true);
@@ -149,6 +156,17 @@ function findOffset(element) {
 		vecto.setFromMatrixPosition(vect.matrixWorld);
 		
 		return vecto;
+	};
+
+	SatelliteObject.prototype.setPosition = function(timestamp) {
+		// takes a UNIX timestamp and positions the object for that date with respect to the Sun
+		var E = OrbitalDynamics.computeEccentricAnomaly(this.eccentricity, timestamp, this.lastPeriapsis, this.nextPeriapsis);
+		var theta = OrbitalDynamics.getTheta(this.eccentricity, E);
+		
+		// get percent of ellipse travelled
+		this.motion = theta / 360;
+		this.updatePosition();
+		//console.log(this.name + ": θ = " + theta + ", motion: " + this.motion);
 	};
 	
 	SatelliteObject.prototype.updatePosition = function() {

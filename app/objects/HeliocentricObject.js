@@ -49,7 +49,6 @@ function findOffset(element) {
 
 	function HeliocentricObject(data, scene) {
 		this.name = data.name;
-		this.mass = data.mass;
 		this.radius = data.radius;
 		this.semimajor = data.semimajor;
 		this.semiminor = data.semiminor;
@@ -59,6 +58,7 @@ function findOffset(element) {
 		this.eccentricity = data.eccentricity;
 		this.lastPeriapsis = data.lastPeriapsis;
 		this.nextPeriapsis = data.nextPeriapsis;
+		this.GMass = data.GM;
 
 		// stage objects
 		this.scene = scene;
@@ -67,10 +67,10 @@ function findOffset(element) {
 		
 		// materials
 		this.material = new THREE.MeshPhongMaterial({
-			map:         THREE.ImageUtils.loadTexture('app/textures/' + this.name + '.png'),
-			bumpMap:     THREE.ImageUtils.loadTexture('app/textures/' + this.name + '_bump.jpg'),
-			bumpScale:   0.00000005, // make it to planet scale 
-			specularMap: THREE.ImageUtils.loadTexture('app/textures/' + this.name + '_spec.png'),
+			//map:         THREE.ImageUtils.loadTexture('app/textures/' + this.name + '.png'),
+			//bumpMap:     THREE.ImageUtils.loadTexture('app/textures/' + this.name + '_bump.jpg'),
+			//bumpScale:   0.00000005, // make it to planet scale 
+			//specularMap: THREE.ImageUtils.loadTexture('app/textures/' + this.name + '_spec.png'),
 			specular:    new THREE.Color('gray')
 		});
 		this.lineMaterial = new THREE.LineBasicMaterial({ color: 0xFFFFFF, opacity:0.4, transparent: true});
@@ -131,10 +131,10 @@ function findOffset(element) {
 		
 		// rotate the plane according to the angle of inclination and the longitude of its ascending node
 		this.referencePlane.rotation.x = -Math.PI/2;
-		this.referencePlane.rotation.z = toRadians(this.longAscNode);
+		this.referencePlane.rotation.z = Math.PI/2+toRadians(this.longAscNode);
 	
 		this.plane.rotation.x = toRadians(this.inclination);
-		this.plane.rotation.z += toRadians(this.argPeriapsis);
+		this.plane.rotation.z = Math.PI/2+toRadians(this.argPeriapsis);
 		var self = this;
 		
 		// create the label for the object (an HTML element) and add it to the DOM
