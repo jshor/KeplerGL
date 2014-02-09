@@ -10,7 +10,7 @@ var Halley = {
 	lastPeriapsis: 508291200, // UNIX time
 	nextPeriapsis: 2889734400, // UNIX time
 	eccentricity: 0.967,
-	longAscNode: 238.42008097656843,
+	longAscNode: 58.42008097656843,
 	texture: "Halley.jpg",
 	satellites: {}
 }
