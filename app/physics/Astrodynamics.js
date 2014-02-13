@@ -1,12 +1,13 @@
 var OrbitalDynamics = {
 	meanAnomaly: function(t, P) {
-		/* mean anomaly, in degrees (mod 1 for percentage) */
+		// mean anomaly, in degrees (mod 1 for percentage)
 		var meanAnom = t/P % 1 * 360;
 		
 		return meanAnom;
 	},
+	
 	computeEccentricAnomaly: function(ecc, time, lastPeriapsis, nextPeriapsis) {
-		/* get eccentric anomaly as a function of time since periapsis, current time and eccentricity */
+		// get eccentric anomaly as a function of time since periapsis, current time and eccentricity
 		var E, F;
 		var timePassed = (time - lastPeriapsis);
 		var period = (nextPeriapsis - lastPeriapsis);
@@ -16,19 +17,25 @@ var OrbitalDynamics = {
 		E = (ecc < 0.8 ? m : Math.PI);
 		F = E - ecc * Math.sin(m) - m;
 		
-		/* approximation for Kepler's second law */
+		// approximation for Kepler's second law
 		for(var i=0; i<30; i++) {
-			E  =  E - F / (1.0-ecc * Math.cos(E));
-			F  =  E - ecc * Math.sin(E) - m;
+			E = E - F / (1.0-ecc * Math.cos(E));
+			F = E - ecc * Math.sin(E) - m;
 		}
 		
 		return E;
 	},
+	
 	getTheta: function(ecc, E) {
-		/* get angle from eccentricity and eccentric anomaly */
+		// get angle from eccentricity and eccentric anomaly
 		var min = Math.sqrt(1.0-ecc*ecc);
 		var theta = Math.atan2(min*Math.sin(E), Math.cos(E)-ecc)/(Math.PI/180);
 		
 		return (theta < 0 ? 360+theta : theta);
+	},
+	
+	orbitalEnergyConservation: function(GM, r, semimajor) {
+		// also known as the "vis-viva" equation
+		return Math.sqrt(Math.abs(GM*((2/r)-(1/semimajor))));
 	}
 };
