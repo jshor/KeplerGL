@@ -8,24 +8,57 @@ body {
 .dialog-info {
 	width: 100%;
 	height: 70%;
-	border: 1px solid #fff;
+	overflow-y: scroll;
+	padding: 10px;
+	font-size: small;
+}
+
+.dialog-info p { text-indent: 1.5em; }
+
+.destination-list {
+	width: 160px;
+	border: 1px solid #808080;
+	background: #000;
+	display: none;
+	-webkit-box-shadow: 0px 0px 3px 0px rgba(255, 255, 255, 0.77);
+	-moz-box-shadow:    0px 0px 3px 0px rgba(255, 255, 255, 0.77);
+	box-shadow:         0px 0px 3px 0px rgba(255, 255, 255, 0.77);
+}
+
+.destination-list ul {
+	list-style-type: none;
+	margin:0px;
+	padding:0px;
+}
+
+.destination-list li {
+	font-size: small;
+	border-bottom: 1px dotted #808080;
+	padding: 6px;
+	margin:0px;
+	text-shadow: 0 0 4px #fff;
+	cursor: pointer;
+}
+
+.destination-list li:hover {
+	background: #0F0F0A;
+}
+
+@-webkit-keyframes pulsePerspective {
+  from { color: #808080; text-shadow: 0 0 1px #808080; }
+  50% { color: #fff; text-shadow: 0 0 40px #fff; }
+  to { color: #808080; text-shadow: 0 0 1px #808080; }
 }
 
 .perspective-list {
-	color: #E8E8FF;
 	text-decoration: underline;
 	cursor: pointer;
-}
-
-.chg-perspective {
-	border: 1px solid #fff;
-	border-radius: 3px;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	font-size: small;
-	margin-left: 5px;
-	padding: 2px 6px 2px 6px;
-	cursor: pointer;
+	text-shadow: 0px 0px 8px rgba(255, 255, 255, 1);
+	animation-timing-function:linear;
+	-webkit-animation-timing-function:linear;
+	-webkit-animation-name: pulsePerspective;
+	-webkit-animation-duration: 2s;
+	-webkit-animation-iteration-count: infinite;
 }
 
 .chg-perspective-glow {
@@ -68,7 +101,7 @@ body {
 	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha"(Opacity=50);
 }
 
-.object-label:hover, #controls:hover, #scales:hover {
+.object-label:hover, #controls:hover, .scales:hover {
 	-moz-opacity: 1;
 	opacity: 1;
 	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha"(Opacity=100);
@@ -143,7 +176,7 @@ body {
 	margin-top: 5px;
 }
 
-#scales {
+.scales {
 	color: #fff;
 	position: absolute;
 	bottom:80px;
@@ -162,10 +195,16 @@ body {
 	text-shadow: 0px 0px 4px rgba(255, 255, 255, 1);
 }
 
-#planetScale, #speedScale {
-	width: 150px;
-	margin-top: -10px;
+.scales label {
+	margin-bottom: 10px;
 }
+
+.scales .noUi-horizontal {
+	width: 150px;
+	margin-top: 10px;
+}
+
+.grayed-out { color: #808080; text-shadow: none; }
 
 .dialogUnderlay {
 	display: none;
