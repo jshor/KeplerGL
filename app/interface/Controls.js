@@ -1,5 +1,6 @@
 define([
-	"jquery"
+	"jquery",
+	"jquery.nouislider.min"
 ],
 function ($) {
 	function Controls() {
@@ -9,7 +10,31 @@ function ($) {
 		this.lastZoomPosition = 0;
 		this.scene = scene;
 		
+		// dom elements for scales (time speed and planet scale)
+		var scales = $("<div></div>");
+		this.timeScaleFactor = $("<sup></sup>");
+		this.sizeScaleFactor = $("<sup></sup>");
+		this.timeScaleFactor.html("0");
+		this.timeScale = $("<div></div>");
+		this.sizeScale = $("<div></div>");
+		
+		scales.addClass("scales");
+		scales.append("Time speed: &times;10");
+		scales.append(this.timeScaleFactor);
+		scales.append('<br style="clear:both" />');
+		scales.append(this.timeScale);
+		scales.append('<br style="clear:both" />');
+		scales.append("Planet scale: &times;10");
+		scales.append(this.sizeScaleFactor);
+		scales.append(this.sizeScale);
+		scales.append('<br style="clear:both" />');
+		
+		var self = this;
+		
 		$(document).ready(function() {
+			// append scales
+			$("body").append(scales);
+			
 			// zoom scroll
 			$("#zoomScroll").noUiSlider({
 				range: [0,100],
@@ -23,33 +48,31 @@ function ($) {
 				slide: function() {
 					scene.isZoomUpdating = true;
 					scene.changeZoom($(this).val());
-					$("#tourLink").html("sliding");
 				},
 			}).change(function() {
 				scene.isZoomUpdating = false;
-				$("#tourLink").html("done");
 			});
 			
 			$("#zoomScroll .noUi-handle").append($("<div></div>"));
 			
 			// planet scale slider 
-			$("#planetScale").noUiSlider({
-				range: [0,8],
-				start: 127,
+			$(self.sizeScale).noUiSlider({
+				range: [1,8],
+				start: 1,
 				handles: 1,
+				step: 1,
 				connect: "lower",
 				orientation: "horizontal",
 				serialization: {
 					resolution: 1
 				},
 				slide: function() {
-					scene.explore("Mercury");
 				}
 			});
-			$("#planetScale .noUi-handle").append($("<div></div>"));
+			$(self.sizeScale).find(".noUi-handle").append($("<div></div>"));
 			
 			// speed scale slider
-			$("#speedScale").noUiSlider({
+			$(self.timeScale).noUiSlider({
 				range: [1,8],
 				start: 1,
 				step: 1,
@@ -61,10 +84,10 @@ function ($) {
 				},
 				slide: function() {
 					scene.timeSpeedScale = Math.pow(10, $(this).val());
-					$("#timeSpeed").html(parseInt($(this).val()-1));
+					$(self.timeScaleFactor).html(parseInt($(this).val()-1));
 				}
 			});
-			$("#speedScale .noUi-handle").append($("<div></div>"));
+			$(self.timeScale).find(".noUi-handle").append($("<div></div>"));
 
 			
 			$("#tourLink").click(function() {
@@ -79,6 +102,13 @@ function ($) {
 				$(".dialogUnderlay").fadeIn("slow");
 			});
 		});
+	};
+	
+	Controls.prototype.toggleZoomScroll = function(visibility) {
+		if(visibility)
+			$("#zoomScroll").show();
+		else
+			$("#zoomScroll").hide();
 	};
 	
 	Controls.prototype.toggleTitle = function(show) {
