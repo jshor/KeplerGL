@@ -30,7 +30,7 @@ function ($, OBJLoader, HeliocentricObject, SatelliteObject, Mercurian, Jovian, 
 		this.pointLight.color.setHSL(0.995, 0.5, 0.9);
 	
 		// sun sprite [a plane that always looks at the camera]
-		var sunTexture 	= THREE.ImageUtils.loadTexture("app/textures/sunflare.png");
+		var sunTexture 	= THREE.ImageUtils.loadTexture("app/textures/Sun.png");
 		var sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture, side: THREE.DoubleSide, transparent: true });
 		var sunGeometry = new THREE.PlaneGeometry(scene.toScale(150000000), scene.toScale(150000000), 1, 1);
 		this.sunSprite 	= new THREE.Mesh(sunGeometry, sunMaterial);
@@ -69,7 +69,7 @@ function ($, OBJLoader, HeliocentricObject, SatelliteObject, Mercurian, Jovian, 
 	var materialArray = [];
 	for (var i = 0; i < 6; i++)
 		materialArray.push( new THREE.MeshBasicMaterial({
-			map: THREE.ImageUtils.loadTexture( imagePrefix + "milky" + imageSuffix ),
+			map: THREE.ImageUtils.loadTexture( imagePrefix + "milkyway" + imageSuffix ),
 			side: THREE.BackSide
 		}));
 		
@@ -136,8 +136,8 @@ function ($, OBJLoader, HeliocentricObject, SatelliteObject, Mercurian, Jovian, 
 			this.planets[i].setPosition(timestamp);
 
 		/* set the positions of planetary satellites */
-	//	for(i=0; i<this.satellites.length; i++)
-//			this.satellites[i].setPosition(timestamp);
+		for(i=0; i<this.satellites.length; i++)
+			this.satellites[i].setPosition(timestamp);
 	};
 	
 	SolarSystem.prototype.updatePositions = function(pause) {
