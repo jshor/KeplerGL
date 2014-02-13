@@ -13,5 +13,6 @@ var Mercury = {
 	eccentricity: 0.205630,
 	longAscNode: 48.331,
 	texture: "Mercury.jpg",
-	satellites: {}
+	satellites: {},
+	atmosphere: 0x777777
 }

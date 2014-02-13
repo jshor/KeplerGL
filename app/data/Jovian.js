@@ -83,5 +83,6 @@ var Jupiter = {
 	longAscNode: 49.562,
 			texture: "Jupiter.jpg"
 		}
-	]
+	],
+	atmosphere: 0x988774
 }

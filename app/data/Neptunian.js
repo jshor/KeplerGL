@@ -14,5 +14,6 @@ var Neptune = {
 	eccentricity: 0.011214269,
 	longAscNode: 131.794310,
 	texture: "Neptune.jpg",
-	satellites: {}
+	satellites: {},
+	atmosphere: 0x4A5689
 }

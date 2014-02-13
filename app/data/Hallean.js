@@ -12,5 +12,6 @@ var Halley = {
 	eccentricity: 0.967,
 	longAscNode: 58.42008097656843,
 	texture: "Halley.jpg",
-	satellites: {}
+	satellites: {},
+	atmosphere: 0xC0C0C0
 }

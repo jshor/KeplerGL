@@ -14,5 +14,6 @@ var Uranus = {
 	eccentricity: 0.044405586,
 	longAscNode: 73.989821,
 	texture: "Uranus.jpg",
-	satellites: {}
+	satellites: {},
+	atmosphere: 0x5891A1
 }

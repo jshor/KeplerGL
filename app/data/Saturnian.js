@@ -22,20 +22,35 @@ var Saturn = {
 	],
 	satellites: [
 		{
+			objectType: "Moon",
 			name: "Titan",
+			atmosphere: 0x948A7E,
+			axialTilt: 0.1,
 			semimajor: 1221930,
 			semiminor: 1221423,
 			radius: 2575.5,
 			inclination: 0.3485,
-			texture: "Titan.jpg"
+	argPeriapsis: 275.066,
+			lastPeriapsis: 1406689200,
+			nextPeriapsis: 1406992500,
+			eccentricity: 0.0101,
+	longAscNode: 100.492
 		},
 		{
+			objectType: "Moon",
 			name: "Tethys",
-			radius: 531.0,
+			atmosphere: 0x948A7E,
+			axialTilt: 0.1,
 			semimajor: 294619,
 			semiminor: 294618,
+			radius: 531.0,
 			inclination: 0.168,
-			texture: "Tethys.jpg"
+	argPeriapsis: 275.066,
+			lastPeriapsis: 1406689200,
+			nextPeriapsis: 1406992500,
+			eccentricity: 0.0101,
+	longAscNode: 100.492
 		}
-	]
+	],
+	atmosphere: 0x97893D
 }
