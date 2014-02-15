@@ -1,16 +1,18 @@
-Things to do (in this order):
-- Fix broken GM constant, implement satellite orbits using Astrodynamics
-- "Tour a planet" options
-	- Make perspective planet invisible
-	- Planetary information
+Things to do:
 - Fix time issue and add calendar UI
-- Planet rotation and size adjustment
+- Fix scope (too many 'this' references) and add namespace
+- Planet rotation (in arcseconds) and size adjustment
 - Add shadows to planets (specifically to this.mesh plane)
-- Camera spin around quaternion when focused on the Sun or Earth
-- Loading screen for textures and models
 - ISS and other satellite models
-- Fix requirejs dependency redundancy
-- Move functions to Math and Vector classes, add RungeKutta algorithm
+- Loading screen for textures and models
+- Camera spin around quaternion when focused on the Sun or Earth
+- Add satellite data and minor planets (get arg. of periapsis)
+	- Jupiter: Europa, Callisto, Ganymede, Io
+	- Saturn: Dione, Enceladus, Mimas, Hyperion, Iapetus, Rhea, Titan
+	- Uranus: Miranda, Ariel, Umbriel, Titania, Oberon
+	- Neptune: Triton
+	- Pluto: Charon
+	- Mars: Phobos, Deimos
+	- Earth: Moon
 - About/help box, screenshot, fullscreen hotkeys
-- Add satellite data and minor planets.
 - Music
