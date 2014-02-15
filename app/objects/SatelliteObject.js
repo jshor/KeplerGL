@@ -107,38 +107,29 @@ function ($, Mesh, Astrodynamics, DialogWindow) {
 
 		return vect;
 	};
-	
-	SatelliteObject.prototype.setPosition = function(timestamp) {
-		// takes a UNIX timestamp and positions the object for that date with respect to the Sun
+
+	SatelliteObject.prototype.updatePosition = function(timestamp) {
+		// takes a UNIX timestamp and positions the object for that date w.r.t. the body it's orbiting
 		var E = OrbitalDynamics.computeEccentricAnomaly(this.eccentricity, timestamp, this.lastPeriapsis, this.nextPeriapsis);
 		var theta = OrbitalDynamics.getTheta(this.eccentricity, E);
-
+		
 		// get percent of ellipse travelled
 		this.motion = theta / 360;
-		this.updatePosition();
-		//console.log(this.name + ": θ = " + theta + ", motion: " + this.motion);
-	};
-
-	SatelliteObject.prototype.updatePosition = function() {
-		// find the magnitude of the vector of the orbiting object
-		this.r = Vectors.magnitude(this.ellipsePath.getPoint(this.motion));
-		this.velocity = OrbitalDynamics.orbitalEnergyConservation(this.GM, this.r, this.semimajor);
-		
-		// the motion will update every time unit with where the ellipse moves in terms of percent
-		this.motion += (this.scene.scaleSpeed((this.velocity / this.perimeter), this.scene.getSpeedScale()));
 		this.motion = (this.motion > 1 ? 0 : this.motion);
-
-		// update the info in the dialog window
-		if(this.name == this.scene.getView() && this.dialog != undefined)
-			this.dialog.updateVelocityDistance(this.velocity, this.r);
 
 		// update the mesh sphere to the new point on the ellipse, depending on the velocity at the previous vector
 		var newPoint = this.ellipsePath.getPoint(this.motion);
 		var vect = new THREE.Vector3();
-
+		var r = Vectors.magnitude(newPoint);
+		var velocity = OrbitalDynamics.orbitalEnergyConservation(this.GM, r, this.semimajor);
+		
 		vect.setFromMatrixPosition(this.pivot.matrix);
-
-		// synchronize the movement of the pivot, mesh and camera target
+		
+		// update the info in the dialog window
+		if(this.name == this.scene.getView() && this.dialog != undefined)
+			this.dialog.updateVelocityDistance(velocity, OrbitalDynamics.toAU(r, this.scene.getScaleConstant()));
+			
+		// synchronize the movement of the pivot and mesh
 		this.pivot.position.x = newPoint.x;
 		this.pivot.position.y = newPoint.y;
 		this.mesh.getObject().position = vect;
