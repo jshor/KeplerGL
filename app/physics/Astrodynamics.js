@@ -18,7 +18,7 @@ var OrbitalDynamics = {
 		F = E - ecc * Math.sin(m) - m;
 		
 		// approximation for Kepler's second law
-		for(var i=0; i<30; i++) {
+		for(var i=0; i<10; i++) {
 			E = E - F / (1.0-ecc * Math.cos(E));
 			F = E - ecc * Math.sin(E) - m;
 		}
@@ -35,7 +35,11 @@ var OrbitalDynamics = {
 	},
 	
 	orbitalEnergyConservation: function(GM, r, semimajor) {
-		// also known as the "vis-viva" equation
+		// approximation for Tchol
 		return Math.sqrt(Math.abs(GM*((2/r)-(1/semimajor))));
+	},
+	
+	toAU: function(x, scale) {
+		return x * scale * 6.68458712e-9;
 	}
 };
