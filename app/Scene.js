@@ -2,20 +2,24 @@ define([
 	'jquery',
 	'interface/Controls',
 	'three/OrbitControls',
-	'three/GridHelper'
+	'three/GridHelper',
+	'physics/Time'
 ], 
-function ($, Controls, OrbitControls, GridHelper) {
+function ($, Controls, OrbitControls, GridHelper, Clock) {
 	function Scene() {
 		// scale of km per GL unit
-		this.timeSpeedScale = 10;
+		this.timeSpeedScale = 1;
 		this.scaleConstant = 10000000000;
 
-		// initial conditions for scene
+		// zoom conditions
 		this.zoomDestination = 100;
 		this.zoomLevel = 1;
 		this.allowZoom = false;
 		this.isZoomUpdating = false;
+		
+		// initial conditions for scene
 		this.paused = true;
+		this.hoverLabel = "";
 		
 		// initialize user interface controls 
 		this.interfaceControls = new Controls();
@@ -35,8 +39,7 @@ function ($, Controls, OrbitControls, GridHelper) {
 		this.lookAt = "Sun";
 		
 		// initalize time
-		this.startDate = new Date().getTime();
-		this.time = 0;
+		this.clock = new Clock(this);
 		
 		// initialize the scene's controls
 		this.interfaceControls.setControls(this);
@@ -73,13 +76,6 @@ function ($, Controls, OrbitControls, GridHelper) {
 	//	this.glScene.add( new THREE.AxisHelper( 1 ) );
 		this.zooming = false;
 		
-		var size = 0.1;
-		var step = 0.01;
-		var gridHelper = new THREE.GridHelper( size, step );
-
-		gridHelper.position = new THREE.Vector3( 0 , 0 , 0 );
-		gridHelper.rotation = new THREE.Euler( 0 , 0, 0 );
-		
 		var skyGeometry = new THREE.SphereGeometry( 1, 32, 32);	
 		this.skyMaterial = new THREE.MeshLambertMaterial({
 			map: THREE.ImageUtils.loadTexture("app/textures/milkyway.jpg"),
@@ -102,10 +98,6 @@ function ($, Controls, OrbitControls, GridHelper) {
 //	this.skyBox.renderDepth = 1000.0;
 	
 	this.sceneOrtho.add( this.skyBox );
-	
-	
-//		this.glScene.add( gridHelper );
-		this.hoverLabel = "";
 	};
 	
 	Scene.prototype.setMouseHover = function(label, over) {
@@ -170,6 +162,15 @@ function ($, Controls, OrbitControls, GridHelper) {
 	};
 	
     Scene.prototype.animate = function() {
+		if(this.solarSystemScene && !this.paused) {
+			// if the solar system is not set to paused, update the scene
+			this.clock.update();
+			this.paused = this.solarSystemScene.updatePositions(this.paused, this.clock.offset()/1000);
+			
+			// update the time/date interface
+			this.interfaceControls.updateDate(this.clock.getUXDate());
+		}
+		
 		this.camera.updateProjectionMatrix();
 		this.glScene.updateMatrixWorld();
 		this.renderer.render(this.sceneOrtho, this.cameraOrtho);
@@ -196,6 +197,7 @@ function ($, Controls, OrbitControls, GridHelper) {
 		this.camera.updateProjectionMatrix();
 		this.controls.update();
 		this.controlsOrtho.update();
+		this.updateZoom();
 		
 		requestAnimationFrame(this.animate.bind(this));
 	};
@@ -228,48 +230,6 @@ function ($, Controls, OrbitControls, GridHelper) {
 		}
 	};
 	
-	Scene.prototype.clockStart = function() {
-		var self = this;
-		var currentDate = new Date();
-		var monthName = ["January", "February", "March", "April", "May", "June", "July", "Augst", "September", "October", "November", "December"];
-		var c = 0;
-		
-		// TBD: bug in Chrome: use setTimeout() instead, put calendar fns in Time.js
-		this.clock 	= setInterval(function() {
-			self.time += self.getSpeedScale();
-			var newtime = self.startDate+(self.time * self.getScaleConstant());
-			currentDate.setTime(newtime);
-			
-			$("#julianDateTime").html(
-				monthName[currentDate.getMonth()] + " " 
-					+ currentDate.getDate() + ", "
-					+ currentDate.getFullYear() + " "
-					+ (currentDate.getHours() < 10 ? "0" : "") + currentDate.getHours() + ":"
-					+ (currentDate.getMinutes() < 10 ? "0" : "") + currentDate.getMinutes() + ":"
-					+ (currentDate.getSeconds() < 10 ? "0" : "") + currentDate.getSeconds() + " "
-					+ currentDate.getTimezoneOffset()
-			);
-			
-			self.updateZoom();
-			
-			if(self.solarSystemScene && !self.paused) {
-				self.paused = self.solarSystemScene.updatePositions(self.paused);
-			}
-		}, 1);
-	};
-	
-	Scene.prototype.clockPause = function() {
-		clearInterval(this.clock);
-	};
-	
-	Scene.prototype.add = function(object) {
-		this.glScene.add(object);
-	};
-	
-	Scene.prototype.getScene = function() {
-		return this.scene;
-	};
-	
 	Scene.prototype.toScale = function(x) {
 		return x / this.scaleConstant;
 	};
@@ -281,11 +241,11 @@ function ($, Controls, OrbitControls, GridHelper) {
 	Scene.prototype.getSpeedScale = function() {
 		return this.timeSpeedScale / this.scaleConstant;
 	};
-
-	Scene.prototype.scaleSpeed = function(speed, timeSpeed) {
+	
+	Scene.prototype.scaleSpeed = function(speed) {
 		/* the interval is set to update time every 1 millisecond so 1ms=1s in this scale
 		   therefore, actual speed must be divided by 1000 * the scaling constant scaleConstant */
-		return (speed * this.timeSpeedScale / 1000) / this.scaleConstant;
+		return (speed * this.timeSpeedScale / 100) / this.scaleConstant;
 	};
 	
 	Scene.prototype.getScaleConstant = function() {
@@ -293,8 +253,12 @@ function ($, Controls, OrbitControls, GridHelper) {
 		return this.scaleConstant;
 	};
 	
-	Scene.prototype.getTime = function() {
-		return this.time;
+	Scene.prototype.add = function(object) {
+		this.glScene.add(object);
+	};
+	
+	Scene.prototype.getScene = function() {
+		return this.scene;
 	};
 	
 	Scene.prototype.setSolarSystemScene = function(solarSystemScene) {
