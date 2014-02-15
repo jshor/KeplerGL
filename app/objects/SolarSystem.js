@@ -112,7 +112,7 @@ function ($, OBJLoader, HeliocentricObject, SatelliteObject, Mercurian, Jovian, 
 									
 		/* set positions of planets according to current timestamp */
 		var timestamp = new Date();
-		this.setPositions(Math.floor(timestamp.getTime()/1000));
+		this.updatePositions(false, Math.floor(timestamp.getTime()/1000));
 		scene.paused = false;
 	}
 	
@@ -127,31 +127,17 @@ function ($, OBJLoader, HeliocentricObject, SatelliteObject, Mercurian, Jovian, 
 	};
 	
 	SolarSystem.prototype.getObj = function() {
-		return this.planets[1]; // returns saturn
+		return this.planets[1]; // returns saturn (why?)
 	};
 	
-	SolarSystem.prototype.setPositions = function(timestamp) {
-		/* set the positions of heliocentric objects */
+	SolarSystem.prototype.updatePositions = function(pause, timestamp) {
+		// update the positions of heliocentric objects
 		for(i=0; i<this.planets.length; i++)
-			this.planets[i].setPosition(timestamp);
+			this.planets[i].updatePosition(timestamp);
 
-		/* set the positions of planetary satellites */
+		// update the positions of planetary satellites
 		for(i=0; i<this.satellites.length; i++)
-			this.satellites[i].setPosition(timestamp);
-	};
-	
-	SolarSystem.prototype.updatePositions = function(pause) {
-		/* update the positions of heliocentric objects */
-		for(i=0; i<this.planets.length; i++)
-			this.planets[i].updatePosition();
-
-		/* update the positions of planetary satellites */
-		for(i=0; i<this.satellites.length; i++)
-			this.satellites[i].updatePosition();
-			
-		/* update the positions of the asteroid belt */
-		//if(this.asteroidBelt)
-		//	this.asteroidBelt.rotation.y += 0.0005;*/
+			this.satellites[i].updatePosition(timestamp);
 	};
 	
 	return SolarSystem;
