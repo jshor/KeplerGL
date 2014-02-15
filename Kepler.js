@@ -35,20 +35,16 @@ define([
 	"Scene",
 ],
 function($, SolarSystem, Astrodynamics, Controls, Scene) {
-    // TBD: add in a loading screen, and check for webgl
-	// if no webgl is present, show the user an info screen
-    var glScene 			= new Scene();
-	var solarSystemScene 	= new SolarSystem(glScene);
+    var glScene = new Scene();
+	var solarSystemScene = new SolarSystem(glScene);
 	
-	/* position solar system objects and start the clock */
+	// position solar system objects and start animation
 	glScene.setSolarSystemScene(solarSystemScene);
-	glScene.animate(solarSystemScene);
-	glScene.clockStart();
+	glScene.animate();
 	
 	$(function() {
 		$(window).resize(function() {
 			glScene.windowResize();
-			interfaceControls.correctZoomScrollHeight();
 		});
 	});
 });
