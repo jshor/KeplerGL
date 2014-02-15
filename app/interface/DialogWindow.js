@@ -100,11 +100,17 @@ function ($) {
 			this.dialogOverlay.append("<br />");
 			this.dialogOverlay.append("Distance from " + relativeBody + ": ").append(this.distance).append(" AU");
 			this.dialogOverlay.append("<br />").append("<br />");
-			this.dialogOverlay.append("From " + title + ", look at: ");
+			this.dialogOverlay.append("From &#9791; " + title + ", look at: ");
 			this.dialogOverlay.append(this.perspectiveList);
 			this.dialogOverlay.append(this.destinationList);
 		}
 		
+		var dialogParams = scene.interfaceControls.getDialogBounds();
+		
+		this.dialogOverlay.height(dialogParams.height);
+		this.dialogUnderlay.height(dialogParams.height);
+		this.dialogOverlay.offset({ top: dialogParams.topOffset });
+		this.dialogUnderlay.offset({ top: dialogParams.topOffset });
 		this.dialogOverlay.fadeIn("slow");
 		this.dialogUnderlay.fadeIn("slow");
 	};
