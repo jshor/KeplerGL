@@ -10,30 +10,44 @@ function ($) {
 		this.lastZoomPosition = 0;
 		this.scene = scene;
 		
-		// dom elements for scales (time speed and planet scale)
-		var scales = $("<div></div>");
+		// DOM elements for the time reference and tour link
+		this.info = $("<div></div>");
+		this.dateTime = $("<div></div>");
+		this.tourLink = $("<div></div>");
+		
+		this.dateTime.addClass("dateTime");
+		this.tourLink.append($("<div></div>"));
+		this.tourLink.append(" Explore a world");
+		this.tourLink.addClass("tourLink");
+		this.info.addClass("info");
+		this.info.append(this.dateTime);
+		this.info.append(this.tourLink);
+		
+		// DOM elements for scales (time speed and planet scale)
+		this.scales = $("<div></div>");
 		this.timeScaleFactor = $("<sup></sup>");
 		this.sizeScaleFactor = $("<sup></sup>");
 		this.timeScaleFactor.html("0");
 		this.timeScale = $("<div></div>");
 		this.sizeScale = $("<div></div>");
 		
-		scales.addClass("scales");
-		scales.append("Time speed: &times;10");
-		scales.append(this.timeScaleFactor);
-		scales.append('<br style="clear:both" />');
-		scales.append(this.timeScale);
-		scales.append('<br style="clear:both" />');
-		scales.append("Planet scale: &times;10");
-		scales.append(this.sizeScaleFactor);
-		scales.append(this.sizeScale);
-		scales.append('<br style="clear:both" />');
+		this.scales.addClass("scales");
+		this.scales.append("Time speed: &times;10");
+		this.scales.append(this.timeScaleFactor);
+		this.scales.append('<br style="clear:both" />');
+		this.scales.append(this.timeScale);
+		this.scales.append('<br style="clear:both" />');
+		this.scales.append("Planet scale: &times;10");
+		this.scales.append(this.sizeScaleFactor);
+		this.scales.append(this.sizeScale);
+		this.scales.append('<br style="clear:both" />');
 		
 		var self = this;
 		
 		$(document).ready(function() {
-			// append scales
-			$("body").append(scales);
+			// append generated DOM elements
+			$("body").append(self.scales);
+			$("body").append(self.info);
 			
 			// zoom scroll
 			$("#zoomScroll").noUiSlider({
@@ -57,8 +71,8 @@ function ($) {
 			
 			// planet scale slider 
 			$(self.sizeScale).noUiSlider({
-				range: [1,8],
-				start: 1,
+				range: [0,8],
+				start: 0,
 				handles: 1,
 				step: 1,
 				connect: "lower",
@@ -73,8 +87,8 @@ function ($) {
 			
 			// speed scale slider
 			$(self.timeScale).noUiSlider({
-				range: [1,8],
-				start: 1,
+				range: [0,8],
+				start: 0,
 				step: 1,
 				handles: 1,
 				connect: "lower",
@@ -83,8 +97,9 @@ function ($) {
 					resolution: 1
 				},
 				slide: function() {
+					scene.clock.resetTime();
 					scene.timeSpeedScale = Math.pow(10, $(this).val());
-					$(self.timeScaleFactor).html(parseInt($(this).val()-1));
+					self.timeScaleFactor.html($(this).val());
 				}
 			});
 			$(self.timeScale).find(".noUi-handle").append($("<div></div>"));
@@ -124,6 +139,21 @@ function ($) {
 	
 	Controls.prototype.setZoom = function(level) {
 		$("#zoomScroll").val(level, true);
+	};
+	
+	Controls.prototype.updateDate = function(time) {
+		this.dateTime.html(time);
+	};
+	
+	Controls.prototype.getDialogBounds = function() {
+		// returns the bounds that a dialog window should abide by
+		var topOffset = this.info.height()+this.info.offset().top;
+		var height = window.innerHeight-topOffset-this.scales.offset().top;
+		
+		return {
+			topOffset: topOffset,
+			height: height
+		};
 	};
 	
 	return Controls;
