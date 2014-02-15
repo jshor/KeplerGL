@@ -8,6 +8,7 @@ function toRadians(x) {
 	return x * Math.PI / 180;
 }
 	function Mesh(data, scene, plane) {
+//	console.log(data.name + " ... " + data.objectType);
 		if(data.objectType == "Jovian" || data.objectType == "Terrestrial" || data.objectType == "Moon") {
 			var geometry = new THREE.SphereGeometry(scene.planetScale(data.radius), 32, 32);	
 			var material = new THREE.MeshPhongMaterial({
@@ -54,7 +55,7 @@ function toRadians(x) {
 			/* load spacecraft object */
 		}
 		
-		return this.mesh;
+	//	return this.mesh;
 	}
 	
 	Mesh.prototype.add = function(object) {
@@ -63,6 +64,12 @@ function toRadians(x) {
 	
 	Mesh.prototype.getObject = function() {
 		return this.mesh;
+	};
+	
+	Mesh.prototype.visible = function(visibility) {
+		this.body.visible = visibility;
+		if(this.rings != undefined)
+			this.rings.visible = visibility;
 	};
 	
 	return Mesh;
