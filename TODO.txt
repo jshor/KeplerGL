@@ -1,10 +1,5 @@
 Things to do:
-- Fix time issue and add calendar UI
-- Fix scope (too many 'this' references) and add namespace
 - Planet rotation (in arcseconds) and size adjustment
-- Add shadows to planets (specifically to this.mesh plane)
-- ISS and other satellite models
-- Loading screen for textures and models
 - Camera spin around quaternion when focused on the Sun or Earth
 - Add satellite data and minor planets (get arg. of periapsis)
 	- Jupiter: Europa, Callisto, Ganymede, Io
