@@ -10,4 +10,5 @@ Things to do:
 	- Mars: Phobos, Deimos
 	- Earth: Moon
 - About/help box, screenshot, fullscreen hotkeys
+- Clean up interface
 - Music
