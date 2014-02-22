@@ -1,12 +1,14 @@
 define([
 	"jquery",
+	"interface/DialogWindow",
 	"jquery.nouislider.min"
 ],
-function ($) {
+function ($, DialogWindow) {
 	function Controls() {
 	};
 	
 	Controls.prototype.setControls = function(scene) {
+		var self = this;
 		this.lastZoomPosition = 0;
 		this.scene = scene;
 		
@@ -22,6 +24,11 @@ function ($) {
 		this.info.addClass("info");
 		this.info.append(this.dateTime);
 		this.info.append(this.tourLink);
+		
+		// create the calendar dialog for changing the date/time of the scene when clicked
+		this.dateTime.click(function() {
+			self.dialog = new DialogWindow(scene, "calendar", "", self.name, "Sun");
+		});
 		
 		// DOM elements for scales (time speed and planet scale)
 		this.scales = $("<div></div>");
@@ -41,8 +48,6 @@ function ($) {
 		this.scales.append(this.sizeScaleFactor);
 		this.scales.append(this.sizeScale);
 		this.scales.append('<br style="clear:both" />');
-		
-		var self = this;
 		
 		$(document).ready(function() {
 			// append generated DOM elements
@@ -147,8 +152,8 @@ function ($) {
 	
 	Controls.prototype.getDialogBounds = function() {
 		// returns the bounds that a dialog window should abide by
-		var topOffset = this.info.height()+this.info.offset().top;
-		var height = window.innerHeight-topOffset-this.scales.offset().top;
+		var topOffset = this.info.height()+this.info.offset().top+30;
+		var height = (this.scales.offset().top-this.info.height()+this.info.offset().top-80);
 		
 		return {
 			topOffset: topOffset,
