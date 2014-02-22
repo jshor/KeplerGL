@@ -3,114 +3,29 @@ define([
 	'three/OBJLoader',
 	'objects/HeliocentricObject',
 	'objects/SatelliteObject',
+	'objects/Sun',
 	'data/Mercurian',
+	'data/Terrestrial',
 	'data/Jovian',
 	'data/Saturnian',
 	'data/Hallean',
 	'data/Uranian',
-	'data/Neptunian',
-], 
-/* TBD: Implement camera look at and then zoom (for tours) */
-function ($, OBJLoader, HeliocentricObject, SatelliteObject, Mercurian, Jovian, Saturnian, Hallean, Uranian, Neptunian) {
-	/* TBD: Add sun mesh */
+	'data/Neptunian'
+],
+function ($, OBJLoader, HeliocentricObject, SatelliteObject, Sun, Mercurian, Terrestrial, Jovian, Saturnian, Hallean, Uranian, Neptunian) {
 	function SolarSystem(scene) {
-		/* create planets and their satellites */
-		this.satellites = Array();
-		this.planets	= Array();
-		this.scene		= scene;
+		// create planets and their satellite
+		this.satellites = [];
+		this.planets = [];
+		this.scene = scene;
 		
-		/* create planet objects */
-		this.createPlanets([Mercury, Jupiter, Saturn, Uranus, Neptune, Halley]);
-			
-		/* sunlight */
-
-		this.pointLight = new THREE.PointLight( 0xffffff, 0.95, 1000 );
-		this.pointLight.color.setHSL(0.55, 0.9, 0.5);
-		this.pointLight.color.setHSL(0.08, 0.8, 0.5);
-		this.pointLight.color.setHSL(0.995, 0.5, 0.9);
-	
-		// sun sprite [a plane that always looks at the camera]
-		var sunTexture 	= THREE.ImageUtils.loadTexture("app/textures/Sun.png");
-		var sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture, side: THREE.DoubleSide, transparent: true });
-		var sunGeometry = new THREE.PlaneGeometry(scene.toScale(150000000), scene.toScale(150000000), 1, 1);
-		this.sunSprite 	= new THREE.Mesh(sunGeometry, sunMaterial);
-
-		// repeat the texture
-		sunTexture.wrapS = THREE.RepeatWrapping;
-		sunTexture.wrapT = THREE.RepeatWrapping;
+		// create planet objects
+		this.createPlanets([Mercury, Earth, Jupiter, Saturn, Uranus, Neptune, Halley]);
 		
-		/* sun mesh */
-		
-		var geometrySun = new THREE.SphereGeometry(scene.toScale(696342), 32, 32);	
-		var materialSun = new THREE.MeshLambertMaterial({color:0xffffff, ambient:0xffffff, emissive:0xffffff});
-		
-			/* draw the sphere */
-		SunMesh = new THREE.Mesh(geometrySun, materialSun);
-		scene.add(SunMesh);
-		
-		// stretch the texture to fit the plane
-		sunTexture.repeat.x = sunTexture.repeat.y = 1;
-
-		// add the plane to a quaternion, always facing the camera
-		this.sunSprite.position.set(0, 0, 0);
-		this.sunSprite.lookAt(scene.camera.position);
-		this.sunSprite.quaternion = scene.camera.quaternion;
-		
-		scene.add(this.sunSprite);
-		scene.add(this.pointLight);
-		
-		/* skybox */
-	
-	var imagePrefix = "app/textures/images/";
-	var directions  = ["px", "nx", "py", "ny", "pz", "nz"];
-//	var directions  = ["sky1", "sky1", "sky2", "sky3", "sky4", "sky5"];
-	var imageSuffix = ".jpg";
-	
-	var materialArray = [];
-	for (var i = 0; i < 6; i++)
-		materialArray.push( new THREE.MeshBasicMaterial({
-			map: THREE.ImageUtils.loadTexture( imagePrefix + "milkyway" + imageSuffix ),
-			side: THREE.BackSide
-		}));
-		
-		
-
-
-		
-		
-		// add it to the scene
-		
-		/* load the ISS */
-		
-		
-				var texture = new THREE.Texture();
-
-				var loader = new THREE.ImageLoader( manager );
-				loader.load( 'textures/iss.jpg', function ( image ) {
-
-					texture.image = image;
-					texture.needsUpdate = true;
-
-				} );
-		
-		 var manager = new THREE.LoadingManager();
-                                manager.onProgress = function ( item, loaded, total ) {
-
-                              //          console.log( item, loaded, total );
-
-                                };
-								
-			var loader = new THREE.OBJLoader( manager );
-									loader.load( 'app/obj/iss.obj', function ( object ) {
-											//object.position.y = 0;
-											//scene.add( object );
-											object.scale.set(0.00005,0.00005,0.00005);
-											
-									} );
+		// create the sun
+		this.sun = new Sun(scene);
 									
-									
-									
-		/* set positions of planets according to current timestamp */
+		// set positions of planets according to current timestamp
 		var timestamp = new Date();
 		this.updatePositions(false, Math.floor(timestamp.getTime()/1000));
 		scene.paused = false;
@@ -118,9 +33,11 @@ function ($, OBJLoader, HeliocentricObject, SatelliteObject, Mercurian, Jovian, 
 	
 	SolarSystem.prototype.createPlanets = function(planets) {
 		for(var i=0; i<planets.length; i++) {
+			// create the heliocentric object, add it to the list
 			var obj = new HeliocentricObject(planets[i], this.scene);
 			this.planets.push(obj);
 
+			// create satellite objects of planet (if any), add it to the list
 			for(var j=0; j<planets[i].satellites.length; j++)
 				this.satellites.push(new SatelliteObject(planets[i].satellites[j], this.scene, obj));
 		}
