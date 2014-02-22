@@ -1,5 +1,6 @@
 define([
-	"jquery"
+	"jquery",
+	"jquery.datetimepicker"
 ],
 function ($) {
 	function DialogWindow(scene, type, html, title, relativeBody) {
@@ -17,6 +18,7 @@ function ($) {
 		this.dialogTitle = $("<div></div>");
 		this.closeBtn = $("<span></span>");
 		this.glowing = true;
+		this.scene = scene;
 		var self = this;
 		
 		// add dialog to the DOM
@@ -37,82 +39,111 @@ function ($) {
 		this.dialogTitle.addClass("heading");
 		
 		if(type == "objectInfo") {
-			// if object is a planet or a satellite, use dialog to display its info
-			this.dialogInfo = $("<div></div>").addClass("dialog-info");
-			this.dialogInfo.html("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
-			this.dialogInfo.append("</p><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
-			this.dialogInfo.append("</p><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
-			this.dialogInfo.append("</p><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
-			this.dialogInfo.append("</p><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
-			this.dialogTitle.html(title);
-			this.dialogOverlay.append(this.dialogTitle);
-			this.dialogOverlay.append(this.dialogInfo);
-			
-			// append real-time velocity and distance info
-			this.velocity = $("<span></span>");
-			this.distance = $("<span></span>");
-			
-			// menu link for perspectives
-			this.destinationList = $("<div></div>");
-			this.destinationList.mouseover(function() {
-				$(this).stop().show();
-			});
-			this.destinationList.mouseout(function() {
-				$(this).stop().hide();
-			});
-			this.destinationList.addClass("destination-list");
-			this.destinationUL = $("<ul></ul>");
-			this.destinationList.append(this.destinationUL);
-			
-			// populate list with celestial objects
-			var objs = ["Mercury", "Jupiter", "Saturn", "Uranus", "Neptune"];
-			
-			for(var i=0; i<objs.length; i++) {
-				var listItem = $("<li></li>");
-				listItem.html(objs[i]);
-				if(objs[i] == title) {
-					listItem.addClass("grayed-out");
-				} else {
-					listItem.click(function() {
-						scene.enterPerspectiveMode($(this).html(), title);
-					});
-				}
-				this.destinationUL.append(listItem);
-			}
-			
-			// menu link for perspectives
-			this.perspectiveList = $("<span></span>");
-			this.perspectiveList.addClass("perspective-list");
-			this.perspectiveList.html("select a destination... &raquo;");
-			this.perspectiveList.mouseover(function() {
-				self.destinationList.stop().fadeIn("fast");
-				self.destinationList.offset({
-					top: (self.perspectiveList.offset().top-self.destinationList.height()),
-					left: self.perspectiveList.offset().left,
-				});
-			});
-			this.perspectiveList.mouseout(function() {
-				self.destinationList.delay(800).stop().fadeOut("fast");
-			});
-			
-			this.dialogOverlay.append("<br />");
-			this.dialogOverlay.append("Velocity at position: ").append(this.velocity).append(" km/s");
-			this.dialogOverlay.append("<br />");
-			this.dialogOverlay.append("Distance from " + relativeBody + ": ").append(this.distance).append(" AU");
-			this.dialogOverlay.append("<br />").append("<br />");
-			this.dialogOverlay.append("From &#9791; " + title + ", look at: ");
-			this.dialogOverlay.append(this.perspectiveList);
-			this.dialogOverlay.append(this.destinationList);
+			this.setDialogInfo(scene, type, html, title, relativeBody);
+		} else if(type == "calendar") {
+			this.setCalendar();
 		}
 		
-		var dialogParams = scene.interfaceControls.getDialogBounds();
+		this.setDialogDimensions();
+		this.dialogOverlay.fadeIn("slow");
+		this.dialogUnderlay.fadeIn("slow");
 		
+		$(window).resize(function() {
+			self.setDialogDimensions();
+		});
+	};
+	
+	DialogWindow.prototype.setCalendar = function() {
+		// set the calendar to change the time/date...
+		this.dialogInfo = $("<div></div>");
+		this.dialogTitle.html("Set time/date...");
+		this.dialogOverlay.append(this.dialogTitle);
+		this.dialogOverlay.append(this.dialogTitle);
+		this.dialogOverlay.append(this.dialogInfo);
+		this.dialogInfo.datetimepicker({
+			format: 'd.m.Y H:i',
+			inline: true,
+			lang: 'en'
+		});
+	};
+	
+	DialogWindow.prototype.setDialogInfo = function(scene, type, html, title, relativeBody) {
+		// if object is a planet or a satellite, use dialog to display its info
+		this.dialogInfo = $("<div></div>").addClass("dialog-info");
+		this.dialogInfo.html("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
+		this.dialogInfo.append("</p><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
+		this.dialogInfo.append("</p><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
+		this.dialogInfo.append("</p><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
+		this.dialogInfo.append("</p><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
+		this.dialogTitle.html(title);
+		this.dialogOverlay.append(this.dialogTitle);
+		this.dialogOverlay.append(this.dialogInfo);
+		
+		// append real-time velocity and distance info
+		this.velocity = $("<span></span>");
+		this.distance = $("<span></span>");
+		
+		// menu link for perspectives
+		this.destinationList = $("<div></div>");
+		this.destinationList.mouseover(function() {
+			$(this).stop().show();
+		});
+		this.destinationList.mouseout(function() {
+			$(this).stop().hide();
+		});
+		this.destinationList.addClass("destination-list");
+		this.destinationUL = $("<ul></ul>");
+		this.destinationList.append(this.destinationUL);
+		
+		// populate list with celestial objects
+		var objs = ["Mercury", "Jupiter", "Saturn", "Uranus", "Neptune"];
+		
+		for(var i=0; i<objs.length; i++) {
+			var listItem = $("<li></li>");
+			listItem.html(objs[i]);
+			if(objs[i] == title) {
+				listItem.addClass("grayed-out");
+			} else {
+				listItem.click(function() {
+					scene.enterPerspectiveMode($(this).html(), title);
+				});
+			}
+			this.destinationUL.append(listItem);
+		}
+		
+		// menu link for perspectives
+		this.perspectiveList = $("<span></span>");
+		this.perspectiveList.addClass("perspective-list");
+		this.perspectiveList.html("select a destination... &raquo;");
+		this.perspectiveList.mouseover(function() {
+			self.destinationList.stop(true).fadeIn("fast");
+			self.destinationList.offset({
+				top: (self.perspectiveList.offset().top-self.destinationList.height()),
+				left: self.perspectiveList.offset().left,
+			});
+		});
+		this.perspectiveList.mouseout(function() {
+			self.destinationList.delay(800).stop(true).fadeOut("fast");
+		});
+		
+		this.dialogOverlay.append("<br />");
+		this.dialogOverlay.append("Velocity at position: ").append(this.velocity).append(" km/s");
+		this.dialogOverlay.append("<br />");
+		this.dialogOverlay.append("Distance from " + relativeBody + ": ").append(this.distance).append(" AU");
+		this.dialogOverlay.append("<br />").append("<br />");
+		this.dialogOverlay.append("From &#9791; " + title + ", look at: ");
+		this.dialogOverlay.append(this.perspectiveList);
+		this.dialogOverlay.append(this.destinationList);
+	};
+	
+	DialogWindow.prototype.setDialogDimensions = function() {
+		var dialogParams = this.scene.interfaceControls.getDialogBounds();
+		
+		this.dialogInfo.height(dialogParams.height-200);
 		this.dialogOverlay.height(dialogParams.height);
 		this.dialogUnderlay.height(dialogParams.height);
 		this.dialogOverlay.offset({ top: dialogParams.topOffset });
 		this.dialogUnderlay.offset({ top: dialogParams.topOffset });
-		this.dialogOverlay.fadeIn("slow");
-		this.dialogUnderlay.fadeIn("slow");
 	};
 
 	DialogWindow.prototype.updateVelocityDistance = function(velocity, distance) {
