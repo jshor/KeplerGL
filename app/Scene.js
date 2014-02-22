@@ -1,19 +1,24 @@
 define([
 	'jquery',
 	'interface/Controls',
+	'interface/LoadingManager',
 	'three/OrbitControls',
 	'three/GridHelper',
-	'physics/Time'
+	'physics/Time',
+	'objects/Skybox'
 ], 
-function ($, Controls, OrbitControls, GridHelper, Clock) {
+function ($, Controls, LoadingManager, OrbitControls, GridHelper, Clock, Skybox) {
 	function Scene() {
 		// scale of km per GL unit
 		this.timeSpeedScale = 1;
-		this.scaleConstant = 10000000000;
+		this.scaleConstant = 1000000000;
+		
+		// loading manager
+		this.loader = new LoadingManager();
 
 		// zoom conditions
 		this.zoomDestination = 100;
-		this.zoomLevel = 1;
+		this.zoomLevel = 90;
 		this.allowZoom = false;
 		this.isZoomUpdating = false;
 		
@@ -26,15 +31,15 @@ function ($, Controls, OrbitControls, GridHelper, Clock) {
 		
 		// initialize the WebGL renderer
 		this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-		this.camera	= new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 0.1, 1000);
+		this.camera	= new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 1, 10000);
 		var width = window.innerWidth;
 		var height = window.innerHeight;
 
 		// camera controls
-		this.camera.position.set(100, 100, 100);
+		this.camera.position.set(1000, 1000, 1000);
 		this.controls = new THREE.OrbitControls(this.camera);		
 		this.controls.minDistance = 0;
-		this.controls.maxDistance = 100;
+		this.controls.maxDistance = 1000;
 		this.cameraPerspectivePosition = new THREE.Vector3(0,0,0);
 		this.lookAt = "Sun";
 		
@@ -49,7 +54,10 @@ function ($, Controls, OrbitControls, GridHelper, Clock) {
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		this.renderer.physicallyBasedShading = true;
 		this.renderer.autoClear = false; // To allow render overlay on top of skybox
+		//this.renderer.shadowMapType = THREE.PCFSoftShadowMap; // options are THREE.BasicShadowMap | THREE.PCFShadowMap | THREE.PCFSoftShadowMap
+		this.renderer.shadowMapEnabled = true;
 		document.body.appendChild(this.renderer.domElement);
+		
 		
 		// camera rests on a plane which can repositioned for views
 		this.camerapivot = new THREE.Object3D();
@@ -76,28 +84,8 @@ function ($, Controls, OrbitControls, GridHelper, Clock) {
 	//	this.glScene.add( new THREE.AxisHelper( 1 ) );
 		this.zooming = false;
 		
-		var skyGeometry = new THREE.SphereGeometry( 1, 32, 32);	
-		this.skyMaterial = new THREE.MeshLambertMaterial({
-			map: THREE.ImageUtils.loadTexture("app/textures/milkyway.jpg"),
-			side: THREE.BackSide,
-			color:0x000000, ambient:0x000000, emissive:0x808080});
-
-	this.cameraOrtho = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 0.0001, 1000);
-	this.cameraOrtho.position.set(0.05, 0.05, 0.05);
-		this.controlsOrtho	= new THREE.OrbitControls(this.cameraOrtho);		
-		this.controlsOrtho.minDistance = 0.0002;
-		this.controlsOrtho.maxDistance = 0.1;
-	this.sceneOrtho = new THREE.Scene();
-	this.sceneOrtho.add(this.cameraOrtho);
-	
-	this.skyBox = new THREE.Mesh( skyGeometry, this.skyMaterial );
-	//	this.skyBox.scale.set(-1, 1, 1);
-//	this.skyBox.rotation.set(0, .3, -.9);
-      this.skyBox.rotation.z = Math.PI*25/32;  // get the milky way in the right place
-      this.skyBox.rotation.x = Math.PI/11;
-//	this.skyBox.renderDepth = 1000.0;
-	
-	this.sceneOrtho.add( this.skyBox );
+		// initialize the skybox
+		this.skybox = new Skybox(this);
 	};
 	
 	Scene.prototype.setMouseHover = function(label, over) {
@@ -173,7 +161,7 @@ function ($, Controls, OrbitControls, GridHelper, Clock) {
 		
 		this.camera.updateProjectionMatrix();
 		this.glScene.updateMatrixWorld();
-		this.renderer.render(this.sceneOrtho, this.cameraOrtho);
+		this.skybox.render(this.renderer);
 		this.renderer.render(this.glScene, this.camera);
 		
 		// update the camera frustum
@@ -196,7 +184,7 @@ function ($, Controls, OrbitControls, GridHelper, Clock) {
 		
 		this.camera.updateProjectionMatrix();
 		this.controls.update();
-		this.controlsOrtho.update();
+		this.skybox.update();
 		this.updateZoom();
 		
 		requestAnimationFrame(this.animate.bind(this));
