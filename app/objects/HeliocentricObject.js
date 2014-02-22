@@ -97,6 +97,7 @@ function ($, Mesh, DialogWindow, Astrodynamics) {
 				// show the dialog window when the label is clicked
 				self.scene.setView(self.name, function() {
 					self.dialog = new DialogWindow(self.scene, "objectInfo", "some stuff about planets", self.name, "Sun");
+					self.scene.controls.minDistance = self.radius+1;
 				});
 				$(this).hide();
 			})
@@ -138,7 +139,7 @@ function ($, Mesh, DialogWindow, Astrodynamics) {
 		this.mesh.getObject().position = vect;
 		
 		// normalize the mesh w.r.t. the Sun (one side always faces the Sun)
-		this.mesh.getObject().rotation.y = this.motion*2*Math.PI;
+		this.mesh.getObject().rotation.y = -this.motion*2*Math.PI;
 		
 		// if the label is hovered on, "light up" the orbital path
 		if(this.scene.hoverLabel == this.name || this.scene.getView() == this.name)
