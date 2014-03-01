@@ -24,6 +24,10 @@ function toRadians(x) {
 			// normalize the mesh to the orbit focus
 			this.mesh.rotation.x = -Math.PI/2;						
 		} else {
+			// axial rotation period parameters
+			this.rotation = data.rotation;
+			this.nextPeriapsis = data.nextPeriapsis;
+			
 			// the object is a sphere (or close enough)
 			this.geometry = new THREE.SphereGeometry(scene.planetScale(data.radius), 32, 32);
 			this.material = new THREE.MeshPhongMaterial({
@@ -95,15 +99,20 @@ function toRadians(x) {
 			}
 			
 			// add body to the mesh
-			this.body.rotation.y = 0;
 			this.mesh.add(this.body);
 			
 			// normalize the mesh to the orbit focus
-			this.mesh.rotation.x = -Math.PI/2;
-			this.body.rotation.x = Math.PI/2-toRadians(data.axialTilt);
+			this.mesh.rotation.x = Math.PI/2;
+			this.body.rotation.z = -toRadians(data.axialTilt);
 		}
 		this.mesh.add( new THREE.AxisHelper( 0.001 ) );
 	}
+	
+	Mesh.prototype.rotate = function(t) {
+		// rotate the planet according to arcseconds as a function of time
+		var arcrotation = Math.abs(t*this.rotation*(Math.PI/648000)) % (2*Math.PI); // arcseconds to radians
+		this.body.rotation.y = arcrotation;
+	};
 	
 	Mesh.prototype.add = function(object) {
 		return this.mesh.add(object);
