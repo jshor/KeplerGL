@@ -60,14 +60,19 @@ function ($) {
 		this.dialogOverlay.append(this.dialogTitle);
 		this.dialogOverlay.append(this.dialogTitle);
 		this.dialogOverlay.append(this.dialogInfo);
+		var self=this;
 		this.dialogInfo.datetimepicker({
-			format: 'd.m.Y H:i',
+			format: 'm/d/Y H:i',
 			inline: true,
-			lang: 'en'
+			lang: 'en',
+			onChangeDateTime: function(dp, $input){
+				self.scene.updateTime($input.val())
+			}
 		});
 	};
 	
 	DialogWindow.prototype.setDialogInfo = function(scene, type, html, title, relativeBody) {
+		var self = this;
 		// if object is a planet or a satellite, use dialog to display its info
 		this.dialogInfo = $("<div></div>").addClass("dialog-info");
 		this.dialogInfo.html("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
