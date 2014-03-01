@@ -34,17 +34,15 @@ require.config({
 
 define([
 	"jquery",
-	"objects/SolarSystem",
 	"physics/Astrodynamics",
 	"interface/Controls",
 	"Scene",
 ],
-function($, SolarSystem, Astrodynamics, Controls, Scene) {
+function($, Astrodynamics, Controls, Scene) {
     var glScene = new Scene();
-	var solarSystemScene = new SolarSystem(glScene);
-	
-	// position solar system objects and start animation
-	glScene.setSolarSystemScene(solarSystemScene);
+		
+	// create the solar system scene and animate
+	glScene.setTime(new Date());
 	glScene.animate();
 	
 	$(function() {
