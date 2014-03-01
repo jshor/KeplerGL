@@ -115,7 +115,7 @@ function ($, Mesh, Astrodynamics, DialogWindow) {
 		
 		// get percent of ellipse travelled
 		this.motion = theta / 360;
-		this.motion = (this.motion > 1 ? 0 : this.motion);
+		this.motion = (this.motion > 1 || isNaN(this.motion) ? 0 : this.motion);
 
 		// update the mesh sphere to the new point on the ellipse, depending on the velocity at the previous vector
 		var newPoint = this.ellipsePath.getPoint(this.motion);

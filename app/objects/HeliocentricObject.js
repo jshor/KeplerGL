@@ -119,7 +119,7 @@ function ($, Mesh, DialogWindow, Astrodynamics) {
 		
 		// get percent of ellipse travelled
 		this.motion = theta / 360;
-		this.motion = (this.motion > 1 ? 0 : this.motion);
+		this.motion = (this.motion > 1 || isNaN(this.motion) ? 0 : this.motion);
 		
 		// update the mesh sphere to the new point on the ellipse, depending on the velocity at the previous vector
 		var newPoint = this.ellipsePath.getPoint(this.motion);
@@ -139,7 +139,7 @@ function ($, Mesh, DialogWindow, Astrodynamics) {
 		this.mesh.getObject().position = vect;
 		
 		// normalize the mesh w.r.t. the Sun (one side always faces the Sun)
-		this.mesh.getObject().rotation.y = -this.motion*2*Math.PI;
+		this.mesh.getObject().rotation.y = this.motion*2*Math.PI;
 		
 		// if the label is hovered on, "light up" the orbital path
 		if(this.scene.hoverLabel == this.name || this.scene.getView() == this.name)
@@ -148,7 +148,7 @@ function ($, Mesh, DialogWindow, Astrodynamics) {
 			this.line.material.opacity = 0.4;
 
 		// add rotation of planet
-		// TBD: do this...
+		this.mesh.rotate(timestamp);
 		this.scene.glScene.updateMatrixWorld();
 		
 		if(this.name == this.scene.getView() && !this.scene.perspectiveMode) {
