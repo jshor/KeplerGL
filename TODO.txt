@@ -1,6 +1,9 @@
 Things to do:
-- Planet rotation (in arcseconds) and size adjustment
+- Fix earth rotation and size adjustment
+- Clean up interface
 - Camera spin around quaternion when focused on the Sun or Earth
+
+Final phase:
 - Add satellite data and minor planets (get arg. of periapsis)
 	- Jupiter: Europa, Callisto, Ganymede, Io
 	- Saturn: Dione, Enceladus, Mimas, Hyperion, Iapetus, Rhea, Titan
@@ -9,6 +12,6 @@ Things to do:
 	- Pluto: Charon
 	- Mars: Phobos, Deimos
 	- Earth: Moon
+- "Explore a world" option
 - About/help box, screenshot, fullscreen hotkeys
-- Clean up interface
 - Music
