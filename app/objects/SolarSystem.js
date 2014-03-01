@@ -13,7 +13,7 @@ define([
 	'data/Neptunian'
 ],
 function ($, OBJLoader, HeliocentricObject, SatelliteObject, Sun, Mercurian, Terrestrial, Jovian, Saturnian, Hallean, Uranian, Neptunian) {
-	function SolarSystem(scene) {
+	function SolarSystem(scene, t) {
 		// create planets and their satellite
 		this.satellites = [];
 		this.planets = [];
@@ -24,12 +24,15 @@ function ($, OBJLoader, HeliocentricObject, SatelliteObject, Sun, Mercurian, Ter
 		
 		// create the sun
 		this.sun = new Sun(scene);
-									
+		this.updateTime(scene, t);
+	}
+	
+	SolarSystem.prototype.updateTime = function(scene, t) {
 		// set positions of planets according to current timestamp
-		var timestamp = new Date();
+		timestamp = new Date(t);
 		this.updatePositions(false, Math.floor(timestamp.getTime()/1000));
 		scene.paused = false;
-	}
+	};
 	
 	SolarSystem.prototype.createPlanets = function(planets) {
 		for(var i=0; i<planets.length; i++) {
