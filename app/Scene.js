@@ -5,9 +5,10 @@ define([
 	'three/OrbitControls',
 	'three/GridHelper',
 	'physics/Time',
+	"objects/SolarSystem",
 	'objects/Skybox'
 ], 
-function ($, Controls, LoadingManager, OrbitControls, GridHelper, Clock, Skybox) {
+function ($, Controls, LoadingManager, OrbitControls, GridHelper, Clock, SolarSystem, Skybox) {
 	function Scene() {
 		// scale of km per GL unit
 		this.timeSpeedScale = 1;
@@ -88,6 +89,20 @@ function ($, Controls, LoadingManager, OrbitControls, GridHelper, Clock, Skybox)
 		this.skybox = new Skybox(this);
 	};
 	
+	Scene.prototype.updateTime = function(t) {
+		// update time for the solar system scene
+		this.paused = true;
+		this.clock.setTime(t);
+		this.solarSystemScene.updateTime(this, t);
+	};
+	
+	Scene.prototype.setTime = function(t) {
+		// create a new solar system scene
+		this.solarSystemScene = new SolarSystem(this, t);
+		this.clock = new Clock(this);
+		this.renderer.sortObjects = false;
+	};
+	
 	Scene.prototype.setMouseHover = function(label, over) {
 		this.hoverLabel = (over ? label : "");
 	};
@@ -131,7 +146,7 @@ function ($, Controls, LoadingManager, OrbitControls, GridHelper, Clock, Skybox)
 		/* why 101.99 and not 100? because the zoom increment is 2, and the max zoom
 		 * must be less than the current zoom level. Therefore, 101.99 < 100+2 */
 		this.zoomLevel = 101.99-this.camera.fov*100;
-		this.zoomDestination = 101.99; 
+		this.zoomDestination = 100; 
 		this.allowZoom = true;
 		this.callback = callback;
 	};
@@ -247,11 +262,6 @@ function ($, Controls, LoadingManager, OrbitControls, GridHelper, Clock, Skybox)
 	
 	Scene.prototype.getScene = function() {
 		return this.scene;
-	};
-	
-	Scene.prototype.setSolarSystemScene = function(solarSystemScene) {
-		this.solarSystemScene = solarSystemScene;
-		this.renderer.sortObjects = false;
 	};
 	
 	Scene.prototype.windowResize = function() {
