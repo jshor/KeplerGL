@@ -26,6 +26,7 @@ function toRadians(x) {
 		} else {
 			// axial rotation period parameters
 			this.rotation = data.rotation;
+			this.radius = data.radius;
 			this.nextPeriapsis = data.nextPeriapsis;
 			
 			// the object is a sphere (or close enough)
@@ -82,7 +83,7 @@ function toRadians(x) {
 				this.rings.receiveShadow = true;
 				this.light.onlyShadow = true;
 				this.light.castShadow = true;
-				this.light.shadowCameraVisible = true;
+				//this.light.shadowCameraVisible = true;
 
 				var d = 0.009;
 				this.light.shadowCameraLeft = -d;
@@ -112,6 +113,15 @@ function toRadians(x) {
 		// rotate the planet according to arcseconds as a function of time
 		var arcrotation = Math.abs(t*this.rotation*(Math.PI/648000)) % (2*Math.PI); // arcseconds to radians
 		this.body.rotation.y = arcrotation;
+	};
+	
+	Mesh.prototype.updateScale = function(scale) {
+		if(this.radius != undefined) {
+			var s = scale;
+			this.mesh.scale.x = s;
+			this.mesh.scale.y = s;
+			this.mesh.scale.z = s;
+		}
 	};
 	
 	Mesh.prototype.add = function(object) {

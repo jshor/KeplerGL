@@ -12,17 +12,15 @@ function($) {
 	
 	Clock.prototype.setTime = function(t) {
 		this.startDate = new Date(t);
-		console.log(t);
 		this.sceneCurrentDate = new Date(t);
 		this.timeOffset = this.sceneCurrentDate.getTime();
-		this.time = 0;
 	};
 	
 	Clock.prototype.update = function() {
         var timeCurrent = new Date().getTime();
 		var oldTime = this.time;
 		
-		this.time = Math.abs(timeCurrent - this.startDate.getTime()); // number of milliseconds since beginning of scene
+		this.time = (timeCurrent - this.startDate.getTime()); // number of milliseconds since beginning of scene (can be negative)
 		this.timeOffset += (this.time-oldTime)*this.scene.timeSpeedScale;
 		this.sceneCurrentDate.setTime(this.timeOffset);
 	};
@@ -46,7 +44,7 @@ function($) {
 			+ (this.sceneCurrentDate.getSeconds() < 10 ? "0" : "") + this.sceneCurrentDate.getSeconds() + " "
 			+ this.sceneCurrentDate.getTimezoneOffset();
 		
-		return this.sceneCurrentDate;
+		return UXDate;
 	};
 	
 	Clock.prototype.getTime = function() {

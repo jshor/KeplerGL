@@ -12,5 +12,17 @@ var Vectors = {
 		} else {
 			return 0;
 		}
+	},
+	
+	cartesianToPolar: function() {
+	},
+	
+	cartesianToSpherical: function() {
+	},
+	
+	polarToCartesian: function() {
+	},
+	
+	sphericalToCartesian: function() {
 	}
 };

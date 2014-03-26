@@ -17,7 +17,7 @@ var OrbitalDynamics = {
 		E = (ecc < 0.8 ? m : Math.PI);
 		F = E - ecc * Math.sin(m) - m;
 		
-		// approximation for Kepler's second law
+		// numerical approximation for Kepler's second law
 		for(var i=0; i<10; i++) {
 			E = E - F / (1.0-ecc * Math.cos(E));
 			F = E - ecc * Math.sin(E) - m;
@@ -35,7 +35,7 @@ var OrbitalDynamics = {
 	},
 	
 	orbitalEnergyConservation: function(GM, r, semimajor) {
-		// approximation for Tchol
+		// approximation for Tsiolkolsky's rocket equation
 		return Math.sqrt(Math.abs(GM*((2/r)-(1/semimajor))));
 	},
 	

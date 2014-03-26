@@ -12,10 +12,14 @@ function ($, Controls, LoadingManager, OrbitControls, GridHelper, Clock, SolarSy
 	function Scene() {
 		// scale of km per GL unit
 		this.timeSpeedScale = 1;
+		this.planetSizeScale = 1;
 		this.scaleConstant = 1000000000;
 		
 		// loading manager
 		this.loader = new LoadingManager();
+		
+		// initialize the skybox
+		this.skybox = new Skybox(this.loader);
 
 		// zoom conditions
 		this.zoomDestination = 100;
@@ -37,10 +41,13 @@ function ($, Controls, LoadingManager, OrbitControls, GridHelper, Clock, SolarSy
 		var height = window.innerHeight;
 
 		// camera controls
-		this.camera.position.set(1000, 1000, 1000);
+		this.camera.position.set(1000, 600, 1000);
+		this.camera.rotation.order = 'YXZ';
 		this.controls = new THREE.OrbitControls(this.camera);		
 		this.controls.minDistance = 0;
-		this.controls.maxDistance = 1000;
+		this.controls.maxDistance = 500;
+		this.controls.autoRotate = true;
+		this.controls.autoRotateSpeed = 0.5;
 		this.cameraPerspectivePosition = new THREE.Vector3(0,0,0);
 		this.lookAt = "Sun";
 		
@@ -65,13 +72,14 @@ function ($, Controls, LoadingManager, OrbitControls, GridHelper, Clock, SolarSy
 		this.camerapivot.add(this.camera);
 		
 		/* Terminology for views/perspectives:
-		 *		View mode: looking at an object, generally triggered by clicking its label;
-		 *		           shows dialog window and zooms in on object
-		 *			- view: [object name] the object the user is looking at; when null, it defaults to Sun
-		 *		Perspective mode: allows the user to view and object from another object
-		 *			- observer: [object name] observing planet where camera is at
-		 *			- lookAt: [object name] the object the camera is looking at; when null, it defaults to Sun
-		 *			- cameraLastPosition: last object in view mode
+		 *	View mode: looking at an object, generally triggered by clicking its label;
+		 *  shows dialog window and zooms in on object
+		 *	 - view: [object name] the object the user is looking at; when null, it defaults to Sun
+		 *
+		 *	Perspective mode: allows the user to view and object from another object
+		 *	 - observer: [object name] observing planet where camera is at
+		 *	 - lookAt: [object name] the object the camera is looking at; when null, it defaults to Sun
+		 *	 - cameraLastPosition: last object in view mode
 		 */
 		this.view = null;
 		this.observer = null;
@@ -82,11 +90,7 @@ function ($, Controls, LoadingManager, OrbitControls, GridHelper, Clock, SolarSy
 		// initialize the scene 
 		this.glScene = new THREE.Scene();
 		this.glScene.add(this.camerapivot);
-	//	this.glScene.add( new THREE.AxisHelper( 1 ) );
 		this.zooming = false;
-		
-		// initialize the skybox
-		this.skybox = new Skybox(this);
 	};
 	
 	Scene.prototype.updateTime = function(t) {
@@ -116,6 +120,7 @@ function ($, Controls, LoadingManager, OrbitControls, GridHelper, Clock, SolarSy
 		
 		this.updateCameraFocus(new THREE.Vector3(0,0,0));
 		this.interfaceControls.toggleZoomScroll();
+		this.interfaceControls.setTip("Press 'Esc' to exit perspective");
 	};
 	
 	Scene.prototype.leavePerspectiveMode = function() {
@@ -124,6 +129,8 @@ function ($, Controls, LoadingManager, OrbitControls, GridHelper, Clock, SolarSy
 		this.camera.lookAt = new THREE.Vector3(0,0,0); // origin
 		this.lookAt = null;
 		this.perspectiveMode = false;
+		this.interfaceControls.toggleZoomScroll(true);
+		this.interfaceControls.setTip();
 	};
 	
 	Scene.prototype.updateCameraPosition = function(vect) {
@@ -142,6 +149,7 @@ function ($, Controls, LoadingManager, OrbitControls, GridHelper, Clock, SolarSy
 	Scene.prototype.setView = function(objectName, callback, objectParentName) {
 		// set the object that the camera is focused on
 		this.view = objectName;
+		this.interfaceControls.setTitle(objectName);
 		this.viewParent = (objectParentName != undefined ? objectParentName : "");
 		/* why 101.99 and not 100? because the zoom increment is 2, and the max zoom
 		 * must be less than the current zoom level. Therefore, 101.99 < 100+2 */
@@ -197,6 +205,11 @@ function ($, Controls, LoadingManager, OrbitControls, GridHelper, Clock, SolarSy
 		else
 			this.interfaceControls.toggleTitle(false);
 		
+		// the speed of the camera spin increases as the radius decreases
+		var autoRotateSpeed = parseInt((this.camera.fov+0.5)*2);
+		if(!isNaN(autoRotateSpeed))
+			this.controls.autoRotateSpeed = autoRotateSpeed;
+		
 		this.camera.updateProjectionMatrix();
 		this.controls.update();
 		this.skybox.update();
@@ -225,7 +238,6 @@ function ($, Controls, LoadingManager, OrbitControls, GridHelper, Clock, SolarSy
 				// disallow zooming if the zooming destination is reached
 				this.allowZoom = false;
 				
-				// execute callback function
 				if(this.callback)
 					this.callback();
 				this.callback = null;
@@ -238,7 +250,7 @@ function ($, Controls, LoadingManager, OrbitControls, GridHelper, Clock, SolarSy
 	};
 	
 	Scene.prototype.planetScale = function(x) {
-		return x * 100 / this.scaleConstant; // TBD: modify so users can change this
+		return x * this.planetSizeScale / this.scaleConstant; // TBD: modify so users can change this
 	};
 	
 	Scene.prototype.getSpeedScale = function() {

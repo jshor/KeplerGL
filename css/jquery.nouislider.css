@@ -54,7 +54,7 @@
 .noUi-horizontal .noUi-handle {
 	height: 28px;
 	width: 30px;
-	left: -10px;
+	left: -5px;
 	top: -10px;
 }
 .noUi-horizontal.noUi-extended {
@@ -70,7 +70,7 @@
 	width: 28px;
 	height: 30px;
 	left: -10px;
-	top: -10px;
+	top: -5px;
 }
 .noUi-vertical.noUi-extended {
 	padding: 15px 0;
@@ -126,8 +126,8 @@
 	width: 26px;
 }
 .noUi-horizontal .noUi-handle div {
-	width: 10px;
 	height: 26px;
+	width: 10px;
 }
 
 .noUi-active div {

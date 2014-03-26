@@ -44,7 +44,7 @@ function ($) {
 			this.setCalendar();
 		}
 		
-		this.setDialogDimensions();
+		this.setDialogDimensions(type);
 		this.dialogOverlay.fadeIn("slow");
 		this.dialogUnderlay.fadeIn("slow");
 		
@@ -55,12 +55,12 @@ function ($) {
 	
 	DialogWindow.prototype.setCalendar = function() {
 		// set the calendar to change the time/date...
-		this.dialogInfo = $("<div></div>");
+		this.dialogInfo = $("<div></div>").css("margin", "auto");
 		this.dialogTitle.html("Set time/date...");
 		this.dialogOverlay.append(this.dialogTitle);
 		this.dialogOverlay.append(this.dialogTitle);
 		this.dialogOverlay.append(this.dialogInfo);
-		var self=this;
+		var self = this;
 		this.dialogInfo.datetimepicker({
 			format: 'm/d/Y H:i',
 			inline: true,
@@ -141,8 +141,10 @@ function ($) {
 		this.dialogOverlay.append(this.destinationList);
 	};
 	
-	DialogWindow.prototype.setDialogDimensions = function() {
+	DialogWindow.prototype.setDialogDimensions = function(type) {
 		var dialogParams = this.scene.interfaceControls.getDialogBounds();
+		if(type == "calendar")
+			dialogParams.height = 300;
 		
 		this.dialogInfo.height(dialogParams.height-200);
 		this.dialogOverlay.height(dialogParams.height);

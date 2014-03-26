@@ -116,7 +116,7 @@ function ($, Mesh, DialogWindow, Astrodynamics) {
 		// takes a UNIX timestamp and positions the object for that date w.r.t. the Sun
 		var E = OrbitalDynamics.computeEccentricAnomaly(this.eccentricity, timestamp, this.lastPeriapsis, this.nextPeriapsis);
 		var theta = OrbitalDynamics.getTheta(this.eccentricity, E);
-		
+
 		// get percent of ellipse travelled
 		this.motion = theta / 360;
 		this.motion = (this.motion > 1 || isNaN(this.motion) ? 0 : this.motion);
@@ -137,6 +137,9 @@ function ($, Mesh, DialogWindow, Astrodynamics) {
 		this.pivot.position.x = newPoint.x;
 		this.pivot.position.y = newPoint.y;
 		this.mesh.getObject().position = vect;
+		
+		// update the size of the mesh
+		this.mesh.updateScale(this.scene.planetSizeScale);
 		
 		// normalize the mesh w.r.t. the Sun (one side always faces the Sun)
 		this.mesh.getObject().rotation.y = this.motion*2*Math.PI;

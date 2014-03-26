@@ -1,8 +1,3 @@
-Things to do:
-- Fix earth rotation and size adjustment
-- Clean up interface
-- Camera spin around quaternion when focused on the Sun or Earth
-
 Final phase:
 - Add satellite data and minor planets (get arg. of periapsis)
 	- Jupiter: Europa, Callisto, Ganymede, Io

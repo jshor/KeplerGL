@@ -11,16 +11,19 @@ function ($) {
 		
 		// create the sun mesh
 		var sunRaysMaterial = new THREE.MeshBasicMaterial({
+			map: THREE.ImageUtils.loadTexture("app/textures/Sun.png", new THREE.UVMapping(), function() {
+				scene.loader.onProgress("app/textures/Sun.png", 1, 1);
+			}),
 			side: THREE.DoubleSide,
 			transparent: true
 		});
 	
 		// sun sprite [a plane that always looks at the camera]
-		scene.loader.enqueue("app/textures/Sun.png");
-		var sunTexture = THREE.ImageUtils.loadTexture("app/textures/Sun.png", new THREE.UVMapping(), function() {
-			scene.loader.onProgress("app/textures/Sun.png", 1, 1);
-			sunRaysMaterial.map = sunTexture;
-		});
+		// scene.loader.enqueue("app/textures/Sun.png");
+		// var sunTexture = THREE.ImageUtils.loadTexture("app/textures/Sun.png", new THREE.UVMapping(), function() {
+			// scene.loader.onProgress("app/textures/Sun.png", 1, 1);
+			// sunRaysMaterial.map = sunTexture;
+		// });
 		
 		// render the sun geometries
 		var sunRaysGeometry = new THREE.PlaneGeometry(scene.toScale(150000000), scene.toScale(150000000), 1, 1);
@@ -36,10 +39,10 @@ function ($) {
 		var sunMesh = new THREE.Mesh(sunSphereGeometry, sunSphereMaterial);
 		
 		// stretch the texture to fit the plane
-		sunTexture.wrapS = THREE.RepeatWrapping;
-		sunTexture.wrapT = THREE.RepeatWrapping;
-		sunTexture.transparent = true;
-		sunTexture.repeat.x = sunTexture.repeat.y = 1;
+		// sunTexture.wrapS = THREE.RepeatWrapping;
+		// sunTexture.wrapT = THREE.RepeatWrapping;
+		// sunTexture.transparent = true;
+		// sunTexture.repeat.x = sunTexture.repeat.y = 1;
 
 		// add the plane to a quaternion, always facing the camera
 		sunSprite.position.set(0, 0, 0);

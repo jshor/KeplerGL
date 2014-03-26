@@ -11,11 +11,16 @@ function ($, DialogWindow) {
 		var self = this;
 		this.lastZoomPosition = 0;
 		this.scene = scene;
+		this.soundOn = true;
 		
 		// DOM elements for the time reference and tour link
 		this.info = $("<div></div>");
 		this.dateTime = $("<div></div>");
 		this.tourLink = $("<div></div>");
+		this.zoomScroll = $("<div></div>");
+		this.userTip = $("<div></div>");
+		this.helpToggle = $("<a></a>");
+		this.soundToggle = $("<a></a>");
 		
 		this.dateTime.addClass("dateTime");
 		this.tourLink.append($("<div></div>"));
@@ -24,6 +29,11 @@ function ($, DialogWindow) {
 		this.info.addClass("info");
 		this.info.append(this.dateTime);
 		this.info.append(this.tourLink);
+		
+		this.zoomScroll.attr("id", "zoomScroll");
+		this.soundToggle.attr("id", "soundToggle");
+		this.soundToggle.addClass("sound-on");
+		this.helpToggle.attr("id", "helpToggle");
 		
 		// create the calendar dialog for changing the date/time of the scene when clicked
 		this.dateTime.click(function() {
@@ -53,9 +63,13 @@ function ($, DialogWindow) {
 			// append generated DOM elements
 			$("body").append(self.scales);
 			$("body").append(self.info);
+			$("body").append(self.userTip);
+			$("#controls").append(self.helpToggle);
+			$("#controls").append(self.zoomScroll);
+			$("#controls").append(self.soundToggle);
 			
 			// zoom scroll
-			$("#zoomScroll").noUiSlider({
+			$(self.zoomScroll).noUiSlider({
 				range: [0,100],
 				start: 0,
 				handles: 1,
@@ -71,21 +85,21 @@ function ($, DialogWindow) {
 			}).change(function() {
 				scene.isZoomUpdating = false;
 			});
-			
-			$("#zoomScroll .noUi-handle").append($("<div></div>"));
+			$(self.zoomScroll).find(".noUi-handle").append($("<div></div>"));
 			
 			// planet scale slider 
 			$(self.sizeScale).noUiSlider({
-				range: [0,8],
-				start: 0,
+				range: [1,100],
+				start: 1,
 				handles: 1,
-				step: 1,
 				connect: "lower",
 				orientation: "horizontal",
 				serialization: {
 					resolution: 1
 				},
 				slide: function() {
+					scene.planetSizeScale = $(this).val();
+					self.sizeScaleFactor.html($(this).val());
 				}
 			});
 			$(self.sizeScale).find(".noUi-handle").append($("<div></div>"));
@@ -109,6 +123,22 @@ function ($, DialogWindow) {
 			});
 			$(self.timeScale).find(".noUi-handle").append($("<div></div>"));
 
+			// click events for sound toggle and information
+			$(self.helpToggle).click(function() {
+				alert('to be implemented');
+			});
+			$(self.soundToggle).click(function() {
+				if(self.soundOn) {
+				//	alert('sound on');
+					self.soundOn = false;
+					$(this).toggleClass("sound-off", "sound-on");
+				} else {
+				//	alert('sound off');
+					self.soundOn = true;
+					$(this).toggleClass("sound-on", "sound-off");
+				}
+				self.soundOn = (self.soundOn ? false : true);
+			});
 			
 			$("#tourLink").click(function() {
 				$("#dialogWindow").fadeIn("normal");	
@@ -126,9 +156,16 @@ function ($, DialogWindow) {
 	
 	Controls.prototype.toggleZoomScroll = function(visibility) {
 		if(visibility)
-			$("#zoomScroll").show();
+			this.zoomScroll.show();
 		else
-			$("#zoomScroll").hide();
+			this.zoomScroll.hide();
+	};
+	
+	Controls.prototype.setTip = function(tip) {
+		if(tip != undefined)
+			this.userTip.html(tip);
+		else
+			this.userTip.html("");
 	};
 	
 	Controls.prototype.toggleTitle = function(show) {
@@ -138,12 +175,16 @@ function ($, DialogWindow) {
 			$("#objTitle").fadeOut("slow");
 	};
 	
+	Controls.prototype.setTitle = function(title) {
+		$("#objTitle").html(title);
+	};
+	
 	Controls.prototype.correctZoomScrollHeight = function() {
-		$("#zoomScroll").height(window.innerHeight - 150);
+		this.zoomScroll.height(window.innerHeight - 150);
 	};
 	
 	Controls.prototype.setZoom = function(level) {
-		$("#zoomScroll").val(level, true);
+		this.zoomScroll.val(level, true);
 	};
 	
 	Controls.prototype.updateDate = function(time) {
