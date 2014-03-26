@@ -553,7 +553,7 @@ to the start of each source file to most effectively state the exclusion of warr
 and each file should have at least the &ldquo;copyright&rdquo; line and a pointer to
 where the full notice is found.
 
-    <one line to give the program's name and a brief idea of what it does.>
+    A real-time interactive visualization of our solar system, written in THREE.js.
     Copyright (C) 2014  Joshua P. Shor
 
     This program is free software: you can redistribute it and/or modify
