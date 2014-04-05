@@ -106,7 +106,7 @@ function toRadians(x) {
 			this.mesh.rotation.x = Math.PI/2;
 			this.body.rotation.z = -toRadians(data.axialTilt);
 		}
-		this.mesh.add( new THREE.AxisHelper( 0.001 ) );
+	//	this.mesh.add( new THREE.AxisHelper( 0.001 ) );
 	}
 	
 	Mesh.prototype.rotate = function(t) {
