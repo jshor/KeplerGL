@@ -26,7 +26,7 @@ function ($) {
 		// });
 		
 		// render the sun geometries
-		var sunRaysGeometry = new THREE.PlaneGeometry(scene.toScale(150000000), scene.toScale(150000000), 1, 1);
+		var sunRaysGeometry = new THREE.PlaneGeometry(scene.toScale(15000000), scene.toScale(15000000), 1, 1);
 		var sunSprite 	= new THREE.Mesh(sunRaysGeometry, sunRaysMaterial);
 		var sunSphereGeometry = new THREE.SphereGeometry(scene.toScale(696342), 32, 32);	
 		var sunSphereMaterial = new THREE.MeshLambertMaterial({

@@ -73,29 +73,29 @@ function toRadians(x) {
 				this.rings.rotation.x = Math.PI/2;
 				
 				// add a point light to the mesh to create a shadow on the ring
-				this.mesh.add(this.lightplane);
+				// this.mesh.add(this.lightplane);
 
-				this.light = new THREE.DirectionalLight(0xffffff, .4);
-				this.light.position.set(0, 0.0, -0.03);
-				this.light.target = this.body;
+				// this.light = new THREE.DirectionalLight(0xffffff, .4);
+				// this.light.position.set(0, 0.0, -0.03);
+				// this.light.target = this.body;
 				
-				this.body.castShadow = true;
-				this.rings.receiveShadow = true;
-				this.light.onlyShadow = true;
-				this.light.castShadow = true;
-				//this.light.shadowCameraVisible = true;
+				// this.body.castShadow = true;
+				// this.rings.receiveShadow = true;
+				// this.light.onlyShadow = true;
+				// this.light.castShadow = true;
+				// this.light.shadowCameraVisible = true;
 
-				var d = 0.009;
-				this.light.shadowCameraLeft = -d;
-				this.light.shadowCameraRight = d;
-				this.light.shadowCameraTop = d;
-				this.light.shadowCameraBottom = -d;
+				// var d = 0.009;
+				// this.light.shadowCameraLeft = -d;
+				// this.light.shadowCameraRight = d;
+				// this.light.shadowCameraTop = d;
+				// this.light.shadowCameraBottom = -d;
 
-				this.light.shadowCameraNear = 0.04;
-				this.light.shadowCameraFar = 0.002;
-				this.light.shadowDarkness = 1;
+				// this.light.shadowCameraNear = 0.04;
+				// this.light.shadowCameraFar = 0.002;
+				// this.light.shadowDarkness = 1;
 
-				this.mesh.add(this.light);
+				// this.mesh.add(this.light);
 				this.rings.rotation.x = Math.PI/2-toRadians(data.axialTilt);
 			}
 			

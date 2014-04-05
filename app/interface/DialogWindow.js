@@ -66,7 +66,11 @@ function ($) {
 			inline: true,
 			lang: 'en',
 			onChangeDateTime: function(dp, $input){
-				self.scene.updateTime($input.val())
+				self.scene.updateTime($input.val());
+				
+				setTimeout(function() { // awful, awful hack...
+					self.scene.updateTime($input.val());
+				}, 10);
 			}
 		});
 	};
