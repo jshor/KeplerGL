@@ -4,16 +4,23 @@ define([
 function ($) {
 	function LoadingManager() {
 		// create the loading screen
+		this.loadingPercent = $("<span></span>").html("0").addClass("percent");
 		this.loadingScreen = $("<div></div>").addClass("loading-screen");
-		this.loadingPercent = $("<span></span>").html("0");
 		this.loadingScreen.height(window.innerHeight);
 		this.loadingScreen.width(window.innerWidth);
-		this.loadingScreen.append("<h1>Loading...</h1>");
+		
+		this.loadingBox = $("<div></div>").addClass("content");
+		this.loadingBox.append($("<div></div>").addClass("circle"));
+		this.loadingBox.append($("<div></div>").addClass("circle1"));
+		
+		this.loadingScreen.append(this.loadingBox);
 		this.loadingScreen.append(this.loadingPercent);
-		this.loadingScreen.append("%");
 		
 		$("body").append(this.loadingScreen);
 		$("body").show();
+		
+		this.loadingPercent.css({ marginTop: window.innerHeight/2-40 });
+		this.loadingBox.css({ marginTop: window.innerHeight/2-40 });
 		
 		this.queue = []; // queue of items to load
 		this.itemsLoaded = 0;
@@ -35,7 +42,7 @@ function ($) {
 	
 	LoadingManager.prototype.onProgress = function(item, loaded, total) {
 		this.itemsLoaded++;
-		this.loadingPercent.html((this.itemsLoaded / this.itemsTotal*100).toFixed(0));
+		this.loadingPercent.html((this.itemsLoaded / this.itemsTotal*100).toFixed(0) + "%");
 		if((this.itemsLoaded / this.itemsTotal*100) >= 100)
 			this.loadingScreen.hide();
 		console.log("loaded: " + item);
