@@ -6,15 +6,6 @@ body {
 	display: none;
 }
 
-.loading-screen {
-	background-color: #000;
-	color: #fff;
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index: 1002;
-}
-
 .dialog-info {
 	width: 100%;
 	overflow-y: scroll;
@@ -145,8 +136,8 @@ body {
 	margin-top: 20px;
 }
 
-.sound-on { background-position: center top; }
-.sound-off { background-position: center center; }
+.sound-on { background-position: 0px 0px; }
+.sound-off { background-position: 0px 96px; }
 .user-tip {
 	position: absolute;
 	bottom: 0;
@@ -160,7 +151,7 @@ body {
 
 #helpToggle {
 	margin-bottom: 20px;
-	background-position: center bottom;
+	background-position: 0px 64px;
 }
 
 .link-info {
@@ -194,6 +185,7 @@ body {
 	font-size: medium;
 	font-style: italic;
 	margin-top: 5px;
+	cursor: pointer;
 }
 
 .tourLink div {
@@ -201,7 +193,8 @@ body {
 	vertical-align: middle;
 	width: 32px;
 	height: 32px;
-	background: #fff;
+	background-image: url('../img/toggle-icons.png');
+	background-position: 0px 32px;
 	margin-right: 5px;
 }
 
