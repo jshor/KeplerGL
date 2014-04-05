@@ -41,13 +41,13 @@ function ($, Controls, LoadingManager, OrbitControls, GridHelper, Clock, SolarSy
 		var height = window.innerHeight;
 
 		// camera controls
-		this.camera.position.set(1000, 600, 1000);
+		this.camera.position.set(180, 50, 180);
 		this.camera.rotation.order = 'YXZ';
 		this.controls = new THREE.OrbitControls(this.camera);		
 		this.controls.minDistance = 0;
 		this.controls.maxDistance = 500;
 		this.controls.autoRotate = true;
-		this.controls.autoRotateSpeed = 0.5;
+		this.controls.autoRotateSpeed = 1.5;
 		this.cameraPerspectivePosition = new THREE.Vector3(0,0,0);
 		this.lookAt = "Sun";
 		
@@ -102,8 +102,8 @@ function ($, Controls, LoadingManager, OrbitControls, GridHelper, Clock, SolarSy
 	
 	Scene.prototype.setTime = function(t) {
 		// create a new solar system scene
-		this.solarSystemScene = new SolarSystem(this, t);
 		this.clock = new Clock(this);
+		this.solarSystemScene = new SolarSystem(this, t);
 		this.renderer.sortObjects = false;
 	};
 	
@@ -117,20 +117,34 @@ function ($, Controls, LoadingManager, OrbitControls, GridHelper, Clock, SolarSy
 		this.view = null;
 		this.lookAt = lookAt;
 		this.perspectiveMode = true;
+		this.cameraLastPosition = this.camera.position;
 		
 		this.updateCameraFocus(new THREE.Vector3(0,0,0));
 		this.interfaceControls.toggleZoomScroll();
 		this.interfaceControls.setTip("Press 'Esc' to exit perspective");
+		var self = this;
+		
+		// enable 'esc' event
+		$(document).keyup(function(e) {
+			if (e.keyCode == 27)
+				self.leavePerspectiveMode();
+		});
 	};
 	
 	Scene.prototype.leavePerspectiveMode = function() {
 		// leave perspective mode and look at the origin
-		this.camera.position = this.cameraLastPosition;
-		this.camera.lookAt = new THREE.Vector3(0,0,0); // origin
-		this.lookAt = null;
+		if(this.cameraLastPosition)
+			this.camera.position = this.cameraLastPosition;
+		this.lookAt = "Earth";
 		this.perspectiveMode = false;
 		this.interfaceControls.toggleZoomScroll(true);
 		this.interfaceControls.setTip();
+		
+		// disable 'esc' event
+		$(document).keyup(function(e) {
+			if (e.keyCode == 13)
+				return true;
+		});
 	};
 	
 	Scene.prototype.updateCameraPosition = function(vect) {
