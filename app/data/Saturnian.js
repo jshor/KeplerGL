@@ -7,6 +7,7 @@ var Saturn = {
 	semimajor: 1433449370,
 	semiminor: 1431222154,
 	radius: 58232,
+	rotation: 15.0411, // in arcseconds
 	inclination: 2.49,
 	argPeriapsis: 336.013862,
 	lastPeriapsis: 1056347581, // UNIX time
