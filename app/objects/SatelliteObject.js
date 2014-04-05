@@ -76,7 +76,7 @@ function ($, Mesh, Astrodynamics, DialogWindow) {
 		this.orbitalPlane.add(this.mesh.getObject());
 		
 		this.orbitalPlane.rotation.x = -Math.PI/2+Math2.toRadians(this.inclination);
-		this.mesh.getObject().rotation.x = -Math.PI/2; // rotate the planet mesh to face the orbiting body
+		this.mesh.getObject().rotation.x = Math.PI/2; // rotate the planet mesh to face the orbiting body
 		
 		var self = this;
 
