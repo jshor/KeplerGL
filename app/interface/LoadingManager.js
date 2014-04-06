@@ -42,7 +42,9 @@ function ($) {
 	
 	LoadingManager.prototype.onProgress = function(item, loaded, total) {
 		this.itemsLoaded++;
-		this.loadingPercent.html((this.itemsLoaded / this.itemsTotal*100).toFixed(0) + "%");
+		var loadPercent = (this.itemsLoaded / this.itemsTotal*100).toFixed(0);
+		console.log(loadPercent + "%");
+		this.loadingPercent.html(loadPercent).append("%");
 		if((this.itemsLoaded / this.itemsTotal*100) >= 100)
 			this.loadingScreen.hide();
 		console.log("loaded: " + item);
