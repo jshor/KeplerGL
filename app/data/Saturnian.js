@@ -24,17 +24,32 @@ var Saturn = {
 	satellites: [
 		{
 			objectType: "Moon",
+			name: "Dione",
+			atmosphere: 0x7C7968,
+			axialTilt: 0.00,
+			semimajor: 378161.813,
+			semiminor: 378161.789,
+			radius: 561.4,
+			inclination: 28.017,
+			argPeriapsis: 258.518,
+			lastPeriapsis: 1407444960,
+			nextPeriapsis: 1407678660,
+			eccentricity: 0.0101,
+			longAscNode: 169.551
+		},
+		{
+			objectType: "Moon",
 			name: "Titan",
 			atmosphere: 0x948A7E,
-			axialTilt: 0.1,
+			axialTilt: 0.00,
 			semimajor: 1221930,
 			semiminor: 1221423,
-			radius: 2575.5,
-			inclination: 0.3485,
+			radius: 2576.0,
+			inclination: 0.34854,
 	argPeriapsis: 275.066,
 			lastPeriapsis: 1406689200,
 			nextPeriapsis: 1406992500,
-			eccentricity: 0.0101,
+			eccentricity: 0.0288,
 	longAscNode: 100.492
 		},
 		{
