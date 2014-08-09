@@ -35,37 +35,46 @@ var Saturn = {
 			lastPeriapsis: 1407444960,
 			nextPeriapsis: 1407678660,
 			eccentricity: 0.0101,
-			longAscNode: 169.551
+			longAscNode: 169.551,
+			texture: {
+				map: "Dione.jpg"
+			}
 		},
 		{
 			objectType: "Moon",
 			name: "Titan",
-			atmosphere: 0x948A7E,
+			atmosphere: 0xFDD24F,
 			axialTilt: 0.00,
-			semimajor: 1221930,
-			semiminor: 1221423,
+			semimajor: 1221623.27,
+			semiminor: 1221120.05,
 			radius: 2576.0,
-			inclination: 0.34854,
-	argPeriapsis: 275.066,
-			lastPeriapsis: 1406689200,
-			nextPeriapsis: 1406992500,
-			eccentricity: 0.0288,
-	longAscNode: 100.492
+			inclination: 27.703,
+			argPeriapsis: 172.098,
+			lastPeriapsis: 1407656460,
+			nextPeriapsis: 1409034300,
+			eccentricity: 0.0287,
+			longAscNode: 169.136,
+			texture: {
+				map: "Titan.jpg"
+			}
 		},
 		{
 			objectType: "Moon",
 			name: "Tethys",
-			atmosphere: 0x948A7E,
-			axialTilt: 0.1,
-			semimajor: 294619,
-			semiminor: 294618,
-			radius: 531.0,
-			inclination: 0.168,
-	argPeriapsis: 275.066,
-			lastPeriapsis: 1406689200,
-			nextPeriapsis: 1406992500,
-			eccentricity: 0.0101,
-	longAscNode: 100.492
+			atmosphere: 0xC7B19A,
+			axialTilt: 0.00,
+			semimajor: 294310.415,
+			semiminor: 294310.374,
+			radius: 531.1,
+			inclination: 2.761569226349059E+01,
+			argPeriapsis: 1.477911220670605E+02,
+			lastPeriapsis: 1407029640,
+			nextPeriapsis: 1407216480,
+			eccentricity: 5.271845040709983E-04,
+			longAscNode: 1.673788724570120E+02,
+			texture: {
+				map: "Tethys.jpg"
+			}
 		}
 	],
 	atmosphere: 0x97893D
