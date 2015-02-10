@@ -175,7 +175,7 @@ function ($, Mesh, DialogWindow, Astrodynamics) {
 		}
 		
 		// if the planet is in perspective mode, make it invisible
-		if(this.scene.getObserver() == this.name)
+		if(this.scene.getObserver() == this.name && this.scene.perspectiveMode)
 			this.mesh.visible(false);
 		else
 			this.mesh.visible(true);
