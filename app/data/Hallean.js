@@ -1,6 +1,7 @@
 var Halley = {
 	objectType: "Terrestrial",
 	name: "Halley",
+	info: "info about halleys comet",
 	axialTilt: 0.0,
 	semimajor: 2663000000,
 	semiminor: 678469000,

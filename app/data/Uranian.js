@@ -1,6 +1,7 @@
 var Uranus = {
 	objectType: "Jovian",
 	name: "Uranus",
+	info: "info about uranus",
 	mass: 0.055,
 	GM: 5793939,
 	axialTilt: 97.77,

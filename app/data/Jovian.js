@@ -1,6 +1,7 @@
 var Jupiter = {
 	objectType: "Jovian",
 	name: "Jupiter",
+	info: "info about jupiter",
 	mass: 0.055,
 	GM: 126686534,
 	axialTilt: 3.13,
@@ -21,6 +22,7 @@ var Jupiter = {
 		{
 			objectType: "Moon",
 			name: "Europa",
+			info: "info about europa",
 			atmosphere: 0x948A7E,
 			axialTilt: 0.1,
 			semimajor: 671079,
@@ -39,6 +41,7 @@ var Jupiter = {
 		{
 			objectType: "Moon",
 			name: "Ganymede",
+			info: "info about ganymede",
 			atmosphere: 0x7F7F7F,
 			axialTilt: 0.33,
 			semimajor: 1070412,
@@ -57,6 +60,7 @@ var Jupiter = {
 		{
 			objectType: "Moon",
 			name: "Callisto",
+			info: "info about callisto",
 			atmosphere: 0x463722,
 			axialTilt: 0,
 			semimajor: 1882709,
@@ -75,6 +79,7 @@ var Jupiter = {
 		{
 			objectType: "Moon",
 			name: "Io",
+			info: "info about io",
 			atmosphere: 0xA08A59,
 			radius: 3637.4,
 			axialTilt: 0,

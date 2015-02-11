@@ -1,6 +1,7 @@
 var Saturn = {
 	objectType: "Jovian",
 	name: "Saturn",
+	info: "info about saturn",
 	mass: 0.055,
 	GM: 37931187,
 	axialTilt: 26.73,

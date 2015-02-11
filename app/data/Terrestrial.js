@@ -1,6 +1,7 @@
 var Earth = {
 	objectType: "Terrestrial",
 	name: "Earth",
+	info: "info about earth",
 	mass: 0.055,
 	GM: 6836529,
 	axialTilt: 23.26,
@@ -23,6 +24,7 @@ var Earth = {
 		{
 			objectType: "Moon",
 			name: "Moon",
+			info: "info about moon",
 			atmosphere: 0x948A7E,
 			axialTilt: 0.1,
 			semimajor: 7217,

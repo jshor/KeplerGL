@@ -1,6 +1,7 @@
 var Neptune = {
 	objectType: "Jovian",
 	name: "Neptune",
+	info: "info about neptune",
 	mass: 0.055,
 	GM: 6836529,
 	axialTilt: 28.32,

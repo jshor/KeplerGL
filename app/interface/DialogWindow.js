@@ -175,8 +175,10 @@ function ($) {
 
 	DialogWindow.prototype.updateVelocityDistance = function(velocity, distance) {
 		// update the velocity and distance in the dialog window
-		this.velocity.html(parseFloat(velocity).toFixed(4));
-		this.distance.html(parseFloat(distance).toFixed(4));
+		if(this.velocity != undefined && this.distance != undefined) {
+			this.velocity.html(parseFloat(velocity).toFixed(4));
+			this.distance.html(parseFloat(distance).toFixed(4));
+		}
 	};
 	
 	return DialogWindow;
