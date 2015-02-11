@@ -96,7 +96,7 @@ function ($, Mesh, DialogWindow, Astrodynamics) {
 			.click(function() {
 				// show the dialog window when the label is clicked
 				self.scene.setView(self.name, function() {
-					self.scene.dialog = new DialogWindow(self.scene, "objectInfo", "some stuff about planets", self.name, "Sun");
+					self.scene.dialog = new DialogWindow(self.scene, "objectInfo", self.info, self.name, "Sun");
 					self.scene.controls.minDistance = self.radius+1;
 				});
 				$(this).hide();

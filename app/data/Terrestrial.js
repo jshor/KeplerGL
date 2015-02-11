@@ -25,17 +25,20 @@ var Earth = {
 			objectType: "Moon",
 			name: "Moon",
 			info: "info about moon",
-			atmosphere: 0x948A7E,
-			axialTilt: 0.1,
-			semimajor: 7217,
-			semiminor: 7216,
-			radius: 1565,
-			inclination: 51.65,
-			argPeriapsis: 0,
-			lastPeriapsis: 1136853779,
-			nextPeriapsis: 1136851334,
-			eccentricity: 0.0101,
-			longAscNode: 0
+			atmosphere: 0x999966,
+			axialTilt: 6.687,
+			semimajor: 384399,
+			semiminor: 383240,
+			radius: 1737.1,
+			inclination: 5.145,
+			argPeriapsis: 0, // note: progressing by one revolution in 8.85 years
+			lastPeriapsis: 1424331000,
+			nextPeriapsis: 1426794000,
+			eccentricity: 0.0549,
+			texture: {
+				map: "Moon.png",
+			},
+			longAscNode: 0 // note: regressing by one revolution in 18.6 years
 		}
 	],
 	atmosphere: 0x0089BC

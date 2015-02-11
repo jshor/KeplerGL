@@ -93,7 +93,7 @@ function ($, Mesh, Astrodynamics, DialogWindow) {
 			.click(function() {
 				// show the dialog window when the label is clicked
 				self.scene.setView(self.name, function() {
-					self.dialog = new DialogWindow(self.scene, "objectInfo", "some stuff about planets", self.name, self.planet.name);
+					self.dialog = new DialogWindow(self.scene, "objectInfo", self.info, self.name, self.planet.name);
 				});
 				$(this).hide();
 			})
