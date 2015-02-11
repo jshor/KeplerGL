@@ -6,6 +6,7 @@ require.config({
 		"threejs": "../lib/three/threejs",
 		"objects/HeliocentricObject": "objects/HeliocentricObject",
 		"interface/DialogWindow": "interface/DialogWindow",
+		"interface/Tour": "interface/Tour",
 		jquery : "../lib/jquery/jquery",
         "jquery.nouislider.min": "../lib/jquery/jquery.nouislider.min",
         "jquery.datetimepicker": "../lib/jquery/jquery.datetimepicker"

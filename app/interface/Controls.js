@@ -1,9 +1,10 @@
 define([
 	"jquery",
 	"interface/DialogWindow",
+	"interface/Tour",
 	"jquery.nouislider.min"
 ],
-function ($, DialogWindow) {
+function ($, DialogWindow, Tour) {
 	function Controls() {
 	};
 	
@@ -26,6 +27,13 @@ function ($, DialogWindow) {
 		this.tourLink.append($("<div></div>"));
 		this.tourLink.append(" Explore a world");
 		this.tourLink.addClass("tourLink");
+		
+		// show the "explore a world" tour window on user request
+		this.tourLink.click(function() {
+			self.dialog = new Tour(scene);
+			// self.tour.showTour(self);
+		});
+		
 		this.info.addClass("info");
 		this.info.append(this.dateTime);
 		this.info.append(this.tourLink);
@@ -37,7 +45,7 @@ function ($, DialogWindow) {
 		
 		// create the calendar dialog for changing the date/time of the scene when clicked
 		this.dateTime.click(function() {
-			self.dialog = new DialogWindow(scene, "calendar", "", self.name, "Sun");
+			self.dialog = new DialogWindow(scene, "calendar", "", self.name, "Sun", 310);
 		});
 		
 		// DOM elements for scales (time speed and planet scale)

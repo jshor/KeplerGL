@@ -22,7 +22,7 @@ var Earth = {
 	satellites: [
 		{
 			objectType: "Moon",
-			name: "International Space Station",
+			name: "Moon",
 			atmosphere: 0x948A7E,
 			axialTilt: 0.1,
 			semimajor: 7217,
@@ -33,8 +33,7 @@ var Earth = {
 			lastPeriapsis: 1136853779,
 			nextPeriapsis: 1136851334,
 			eccentricity: 0.0101,
-			longAscNode: 0,
-			objectMesh: "iss.obj"
+			longAscNode: 0
 		}
 	],
 	atmosphere: 0x0089BC

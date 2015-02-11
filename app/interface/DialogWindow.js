@@ -3,7 +3,7 @@ define([
 	"jquery.datetimepicker"
 ],
 function ($) {
-	function DialogWindow(scene, type, html, title, relativeBody) {
+	function DialogWindow(scene, type, html, title, relativeBody, widthOverride) {
 		// kill all previous dialog windows
 		$(".dialogUnderlay").fadeOut("slow", function() {
 			$(this).remove();
@@ -38,11 +38,18 @@ function ($) {
 		this.dialogOverlay.addClass("dialogWindow");
 		this.dialogTitle.addClass("heading");
 		
-		if(type == "objectInfo") {
-			this.setDialogInfo(scene, type, html, title, relativeBody);
-		} else if(type == "calendar") {
-			this.setCalendar();
+		// if width override is requested, set dialog width to it
+		if(widthOverride > 0) {
+			this.dialogOverlay.css("width", widthOverride + "px", "important");
+			this.dialogUnderlay.css("width", widthOverride + "px", "important");
 		}
+		
+		if(type == "calendar")
+			this.setCalendar();
+		else if(type == "tour")
+			this.setTour(html);
+		else
+			this.setDialogInfo(scene, type, html, title, relativeBody);
 		
 		this.setDialogDimensions(type);
 		this.dialogOverlay.fadeIn("slow");
@@ -51,6 +58,18 @@ function ($) {
 		$(window).resize(function() {
 			self.setDialogDimensions();
 		});
+	};
+	
+	DialogWindow.prototype.setTour = function(html) {
+		// set the tour for the "explore a world" option
+		this.dialogInfo = $("<div></div>")
+			.css("margin", "auto")
+			.html(html);
+		this.dialogTitle.html("Explore a World");
+		this.dialogOverlay.append(this.dialogTitle);
+		this.dialogOverlay.append(this.dialogTitle);
+		this.dialogOverlay.append(this.dialogInfo);
+		var self = this;
 	};
 	
 	DialogWindow.prototype.setCalendar = function() {
@@ -79,11 +98,7 @@ function ($) {
 		var self = this;
 		// if object is a planet or a satellite, use dialog to display its info
 		this.dialogInfo = $("<div></div>").addClass("dialog-info");
-		this.dialogInfo.html("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
-		this.dialogInfo.append("</p><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
-		this.dialogInfo.append("</p><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
-		this.dialogInfo.append("</p><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
-		this.dialogInfo.append("</p><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
+		this.dialogInfo.html(html);
 		this.dialogTitle.html(title);
 		this.dialogOverlay.append(this.dialogTitle);
 		this.dialogOverlay.append(this.dialogInfo);
@@ -147,6 +162,7 @@ function ($) {
 	
 	DialogWindow.prototype.setDialogDimensions = function(type) {
 		var dialogParams = this.scene.interfaceControls.getDialogBounds();
+		
 		if(type == "calendar")
 			dialogParams.height = 300;
 		

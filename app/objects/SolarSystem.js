@@ -1,6 +1,5 @@
 define([
 	'jquery',
-	'three/OBJLoader',
 	'objects/HeliocentricObject',
 	'objects/SatelliteObject',
 	'objects/Sun',
@@ -12,7 +11,7 @@ define([
 	'data/Uranian',
 	'data/Neptunian'
 ],
-function ($, OBJLoader, HeliocentricObject, SatelliteObject, Sun, Mercurian, Terrestrial, Jovian, Saturnian, Hallean, Uranian, Neptunian) {
+function ($, HeliocentricObject, SatelliteObject, Sun, Mercurian, Terrestrial, Jovian, Saturnian, Hallean, Uranian, Neptunian) {
 	function SolarSystem(scene, t) {
 		// create planets and their satellite
 		this.satellites = [];
