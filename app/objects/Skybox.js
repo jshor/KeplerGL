@@ -14,8 +14,8 @@ function toRadians(x) {
 		this.camera	= new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 10, 10000);
 		this.camera.position.set(1, 1, 1);
 		this.controls = new THREE.OrbitControls(this.camera);	
-		this.controls.autoRotate = true;
-		this.controls.autoRotateSpeed = 1.5;	
+		// this.controls.autoRotate = true;
+		// this.controls.autoRotateSpeed = 1.5;	
 		this.controls.userZoom = false;
 		// this.controls.minDistance = 10;
 		// this.controls.maxDistance = 10;

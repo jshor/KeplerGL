@@ -46,8 +46,8 @@ function ($, Controls, LoadingManager, OrbitControls, GridHelper, Clock, SolarSy
 		this.controls = new THREE.OrbitControls(this.camera);		
 		this.controls.minDistance = 0;
 		this.controls.maxDistance = 500;
-		this.controls.autoRotate = true;
-		this.controls.autoRotateSpeed = 1.5;
+		// this.controls.autoRotate = true;
+		// this.controls.autoRotateSpeed = 1.5;
 		this.cameraPerspectivePosition = new THREE.Vector3(0,0,0);
 		this.lookAt = "Sun";
 		

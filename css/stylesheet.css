@@ -178,6 +178,7 @@ body {
 .dateTime {
 	color: #fff;
 	font-size: x-large;
+	cursor: pointer;
 }
 
 .tourLink {
@@ -288,7 +289,7 @@ body {
 	cursor: pointer;
 }
 
-#objTitle:hover {
+#objTitle:hover, #dateTime:hover, #tourLink:hover {
 	text-shadow: 0px 0px 29px rgba(255, 255, 255, 1);
 }
 
