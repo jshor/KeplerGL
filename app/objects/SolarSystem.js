@@ -4,14 +4,16 @@ define([
 	'objects/SatelliteObject',
 	'objects/Sun',
 	'data/Mercurian',
+	'data/Venutian',
 	'data/Terrestrial',
+	'data/Martian',
 	'data/Jovian',
 	'data/Saturnian',
 	'data/Hallean',
 	'data/Uranian',
 	'data/Neptunian'
 ],
-function ($, HeliocentricObject, SatelliteObject, Sun, Mercurian, Terrestrial, Jovian, Saturnian, Hallean, Uranian, Neptunian) {
+function ($, HeliocentricObject, SatelliteObject, Sun, Mercurian, Venutian, Terrestrial, Martian, Jovian, Saturnian, Hallean, Uranian, Neptunian) {
 	function SolarSystem(scene, t) {
 		// create planets and their satellite
 		this.satellites = [];
@@ -19,7 +21,7 @@ function ($, HeliocentricObject, SatelliteObject, Sun, Mercurian, Terrestrial, J
 		this.scene = scene;
 		
 		// create planet objects
-		this.createPlanets([Mercury, Earth, Jupiter, Saturn, Uranus, Neptune, Halley]);
+		this.createPlanets([Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Halley]);
 		
 		// create the sun
 		this.sun = new Sun(scene);
