@@ -1,6 +1,7 @@
 var Saturn = {
 	objectType: "Jovian",
 	name: "Saturn",
+	info: "info about saturn",
 	mass: 0.055,
 	GM: 37931187,
 	axialTilt: 26.73,
@@ -74,6 +75,78 @@ var Saturn = {
 			longAscNode: 1.673788724570120E+02,
 			texture: {
 				map: "Tethys.jpg"
+			}
+		},
+		{
+			objectType: "Moon",
+			name: "Enceladus",
+			atmosphere: 0x808080,
+			axialTilt: 0.00,
+			semimajor: 238420.425,
+			semiminor: 237299.849,
+			radius: 252.1,
+			inclination: 2.804034648799505E+01,
+			argPeriapsis: 1.642129238990283E+02,
+			lastPeriapsis: 1416698700,
+			nextPeriapsis: 1416817140,
+			eccentricity: 0.0047,
+			longAscNode: 1.695125025409750E+02,
+			texture: {
+				map: "Enceladus.jpg"
+			}
+		},
+		{
+			objectType: "Moon",
+			name: "Mimas",
+			atmosphere: 0xC0C0C0,
+			axialTilt: 0.00,
+			semimajor: 186032.598,
+			semiminor: 185947.866,
+			radius: 198.2,
+			inclination: 2.799851647365471E+01,
+			argPeriapsis: 1.445340638393475E+02,
+			lastPeriapsis: 1416809160,
+			nextPeriapsis: 1416890760,
+			eccentricity: 2.134176888063347E-02,
+			longAscNode: 1.728655888912200E+02,
+			texture: {
+				map: "Mimas.jpg"
+			}
+		},
+		{
+			objectType: "Moon",
+			name: "Iapetus",
+			atmosphere: 0x45402A,
+			axialTilt: 0.00,
+			semimajor: 3564936.72,
+			semiminor: 3561826.506,
+			radius: 734.5,
+			inclination: 1.708739088112213E+01,
+			argPeriapsis: 2.317682317771272E+02,
+			lastPeriapsis: 1395164760,
+			nextPeriapsis: 1402018440,
+			eccentricity: 2.953719152844289E-02,
+			longAscNode: 1.391084672763423E+02,
+			texture: {
+				map: "Iapetus.jpg"
+			}
+		},
+		{
+			objectType: "Moon",
+			name: "Rhea",
+			atmosphere: 0xE8E8E8,
+			axialTilt: 0.00,
+			semimajor: 527212.528,
+			semiminor: 527212.0115,
+			radius: 763.8,
+			inclination: 2.770506780444135E+01,
+			argPeriapsis: 1.695980117390074E+02,
+			lastPeriapsis: 1415276220,
+			nextPeriapsis: 1415663760,
+			eccentricity: 9.898267554733495E-04,
+			longAscNode: 1.697266419850345E+02,
+			texture: {
+				map: "Rhea.jpg"
 			}
 		}
 	],

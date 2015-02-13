@@ -1,6 +1,7 @@
 var Mercury = {
 	objectType: "Terrestrial",
 	name: "Mercury",
+	info: "info about mercury",
 	mass: 0.055,
 	axialTilt: 26.73,
 	semimajor: 46001200,

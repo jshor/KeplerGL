@@ -46,8 +46,8 @@ function ($, Controls, LoadingManager, OrbitControls, GridHelper, Clock, SolarSy
 		this.controls = new THREE.OrbitControls(this.camera);		
 		this.controls.minDistance = 0;
 		this.controls.maxDistance = 500;
-		this.controls.autoRotate = true;
-		this.controls.autoRotateSpeed = 1.5;
+		// this.controls.autoRotate = true;
+		// this.controls.autoRotateSpeed = 1.5;
 		this.cameraPerspectivePosition = new THREE.Vector3(0,0,0);
 		this.lookAt = "Sun";
 		
@@ -118,13 +118,14 @@ function ($, Controls, LoadingManager, OrbitControls, GridHelper, Clock, SolarSy
 		this.lookAt = lookAt;
 		this.perspectiveMode = true;
 		this.cameraLastPosition = this.camera.position;
-		
+		this.cameraLastFocus = this.camerapivot.position;
+		this.lastZoomLevel = this.zoomlevel;
 		this.updateCameraFocus(new THREE.Vector3(0,0,0));
 		this.interfaceControls.toggleZoomScroll();
 		this.interfaceControls.setTip("Press 'Esc' to exit perspective");
 		var self = this;
 		
-		// enable 'esc' event
+		// disable 'esc' event
 		$(document).keyup(function(e) {
 			if (e.keyCode == 27)
 				self.leavePerspectiveMode();
@@ -133,14 +134,28 @@ function ($, Controls, LoadingManager, OrbitControls, GridHelper, Clock, SolarSy
 	
 	Scene.prototype.leavePerspectiveMode = function() {
 		// leave perspective mode and look at the origin
-		if(this.cameraLastPosition)
+		this.view = this.observer;
+		this.lookAt = this.observer;
+		
+		// reset camera position and perspective
+		if(this.cameraLastPosition != undefined)
 			this.camera.position = this.cameraLastPosition;
-		this.lookAt = "Earth";
+			
+		if(this.cameraLastFocus != undefined)
+			this.cameraLastFocus.position = this.cameraLastFocus;
+		
+		// reset zoom to zoom prior to entering perspective mode
+		if(this.lastZoomLevel != undefined)
+			this.zoomLevel = this.lastZoomLevel;
+			
+		this.allowZoom = true;
+		
+		this.lookAt = this.observer;
 		this.perspectiveMode = false;
 		this.interfaceControls.toggleZoomScroll(true);
-		this.interfaceControls.setTip();
+		this.interfaceControls.setTip(); 
 		
-		// disable 'esc' event
+		// re-enable 'esc' event
 		$(document).keyup(function(e) {
 			if (e.keyCode == 13)
 				return true;

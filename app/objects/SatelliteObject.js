@@ -93,7 +93,7 @@ function ($, Mesh, Astrodynamics, DialogWindow) {
 			.click(function() {
 				// show the dialog window when the label is clicked
 				self.scene.setView(self.name, function() {
-					self.dialog = new DialogWindow(self.scene, "objectInfo", "some stuff about planets", self.name, self.planet.name);
+					self.dialog = new DialogWindow(self.scene, "objectInfo", self.info, self.name, self.planet.name);
 				});
 				$(this).hide();
 			})
@@ -126,8 +126,8 @@ function ($, Mesh, Astrodynamics, DialogWindow) {
 		vect.setFromMatrixPosition(this.pivot.matrix);
 		
 		// update the info in the dialog window
-		if(this.name == this.scene.getView() && this.dialog != undefined)
-			this.dialog.updateVelocityDistance(velocity, OrbitalDynamics.toAU(r, this.scene.getScaleConstant()));
+		if(this.name == this.scene.getView() && this.scene.dialog != undefined)
+			this.scene.dialog.updateVelocityDistance(velocity, OrbitalDynamics.toAU(r, this.scene.getScaleConstant()));
 			
 		// synchronize the movement of the pivot and mesh
 		this.pivot.position.x = newPoint.x;
