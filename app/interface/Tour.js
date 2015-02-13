@@ -8,11 +8,12 @@ define([
 	'data/Martian',
 	'data/Jovian',
 	'data/Saturnian',
-	'data/Hallean',
 	'data/Uranian',
-	'data/Neptunian'
+	'data/Neptunian',
+	'data/Plutonian',
+	'data/Hallean'
 ],
-function ($, DialogWindow, Sun, Mercurian, Venutian, Terrestrial, Martian, Jovian, Saturnian, Hallean, Uranian, Neptunian) {
+function ($, DialogWindow, Sun, Mercurian, Venutian, Terrestrial, Martian, Jovian, Saturnian, Uranian, Neptunian, Plutonian, Hallean) {
 	
 	function Tour(scene) {
 		// set up accordion menu
@@ -21,7 +22,7 @@ function ($, DialogWindow, Sun, Mercurian, Venutian, Terrestrial, Martian, Jovia
 		var accordionList	= $("<ul></ul>").addClass("menu");
 		accordionNav.append(accordionList);
 		
-		var planets = [Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Halley];
+		var planets = [Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Halley];
 		
 		for(var i=0; i<planets.length; i++) {
 			(function(i, planets, scene) {
