@@ -6,4 +6,4 @@ A real-time interactive visualization of our solar system, written in THREE.js.
 Demo
 ====
 
-A preview can be viewed [here](http://jshor.github.io/tycho.io/).
+A working demo can be viewed [here](http://www.tycho.io). Please note that this remains a work in progress. Enjoy!
